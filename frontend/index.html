@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VEWP | Vaccine Early-Warning Portal</title>
+    <meta name="description" content="AI-driven platform alerting pharmaceutical developers to high-risk complement-evading mutations." />
+</head>
+<body>
+    <div id="app">
+        <div id="background-canvas"></div>
+        
+        <aside class="sidebar">
+            <div class="logo-container">
+                <div id="logo-icon-mount"></div>
+                <span class="logo-text">VEWP PORTAL</span>
+            </div>
+            
+            <nav class="nav-links">
+                <a class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon" data-lucide="layout-dashboard"></span>
+                    <span>Dashboard</span>
+                </a>
+                <a class="nav-item" data-page="alerts">
+                    <span class="nav-icon" data-lucide="bell"></span>
+                    <span>Live Alerts</span>
+                </a>
+                <a class="nav-item" data-page="predictions">
+                    <span class="nav-icon" data-lucide="brain-circuit"></span>
+                    <span>AI Predictions</span>
+                </a>
+                <a class="nav-item" data-page="subscriptions">
+                    <span class="nav-icon" data-lucide="rss"></span>
+                    <span>Subscriptions</span>
+                </a>
+                <a class="nav-item" data-page="settings">
+                    <span class="nav-icon" data-lucide="settings"></span>
+                    <span>Settings</span>
+                </a>
+            </nav>
+            
+            <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--border-color);">
+                <div class="user-profile" style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));"></div>
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 600;">Dr. Sarah Chen</div>
+                        <div style="font-size: 0.7rem; color: var(--text-muted);">Lead Researcher</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header>
+                <div class="header-title">
+                    <h1 id="page-title">Genomic Surveillance</h1>
+                    <p id="page-subtitle">Real-time mutation monitoring & risk assessment</p>
+                </div>
+                <div class="header-actions" style="display: flex; gap: 1rem;">
+                    <button class="btn-secondary" style="padding: 10px 20px; border-radius: 12px; background: var(--glass-bg); border: 1px solid var(--glass-border); color: #fff; cursor: pointer;">
+                        Export Report
+                    </button>
+                    <button class="btn-primary" style="padding: 10px 24px; border-radius: 12px; background: var(--primary-color); border: none; color: #000; font-weight: 600; cursor: pointer;">
+                        New Scan
+                    </button>
+                </div>
+            </header>
+
+            <section id="content-area">
+                <div id="view-dashboard" class="view-section active">
+                    <div class="stats-row">
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Total Observations</span>
+                                <span data-lucide="activity" style="color: var(--primary-color)"></span>
+                            </div>
+                            <div class="stat-value" id="stat-total">1,284</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">High Risk Alerts</span>
+                                <span data-lucide="alert-triangle" style="color: var(--alert-color)"></span>
+                            </div>
+                            <div class="stat-value" id="stat-alerts">12</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Prediction Accuracy</span>
+                                <span data-lucide="target" style="color: var(--secondary-color)"></span>
+                            </div>
+                            <div class="stat-value" id="stat-accuracy">94.2%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-header">
+                                <span class="stat-label">Active Subscriptions</span>
+                                <span data-lucide="users" style="color: var(--primary-color)"></span>
+                            </div>
+                            <div class="stat-value" id="stat-subs">48</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h2>Recent High-Risk Mutations</h2>
+                                <a href="#" class="nav-trigger" data-page="alerts" style="font-size: 0.8rem; color: var(--primary-color);">View all</a>
+                            </div>
+                            <div id="alert-list">
+                                <!-- Alert items will be injected here -->
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-header">
+                                <h2>Global Risk Map</h2>
+                            </div>
+                            <div class="visual-container">
+                                <div class="pulse"></div>
+                                <div style="z-index: 1; text-align: center;">
+                                    <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">SIMULATING BIOMETRIC FEED</div>
+                                    <div class="text-gradient" style="font-weight: 700; font-size: 1.1rem;">LIVE MONITORING ACTIVE</div>
+                                </div>
+                                <img id="bg-visual" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.3;" src="" />
+                            </div>
+                            
+                            <div style="margin-top: 2rem;">
+                                <h3 style="font-size: 0.9rem; margin-bottom: 1rem;">Suggested Adjuvant Targets</h3>
+                                <div id="adjuvant-suggestions" style="display: flex; flex-direction: column; gap: 12px;">
+                                    <!-- Suggestions injected here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="view-alerts" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h2>Detailed Alert History</h2>
+                        </div>
+                        <div id="full-alert-list"></div>
+                    </div>
+                </div>
+
+                <div id="view-subscriptions" class="view-section">
+                    <div class="panel" style="max-width: 600px;">
+                        <div class="panel-header">
+                            <h2>Manage Alerts</h2>
+                        </div>
+                        <form id="sub-form" style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div class="form-group">
+                                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Organization Name</label>
+                                <input type="text" id="sub-org" placeholder="e.g. BioTech Corp" style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff;">
+                            </div>
+                            <div class="form-group">
+                                <label style="display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">Endpoint (Email or Webhook)</label>
+                                <input type="text" id="sub-endpoint" placeholder="endpoint@example.com" style="width: 100%; padding: 12px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff;">
+                            </div>
+                            <button type="submit" class="btn-primary" style="padding: 12px; border-radius: 8px; border: none; background: var(--primary-color); font-weight: 600; cursor: pointer;">Register Subscription</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="view-settings" class="view-section">
+                    <div class="panel">
+                        <h2>Portal Settings</h2>
+                        <p style="color: var(--text-muted); margin-top: 1rem;">Configure API endpoints and notification thresholds.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Details -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Mutation Details</h2>
+                <button id="close-modal" style="background: none; border: none; color: var(--text-muted); cursor: pointer;">
+                    <span data-lucide="x"></span>
+                </button>
+            </div>
+            <div id="modal-body" class="modal-body"></div>
+        </div>
+    </div>
+    <script type="module" src="/main.js"></script>
+</body>
+</html>
