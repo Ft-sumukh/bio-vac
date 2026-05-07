@@ -70,7 +70,12 @@ const LandingView = ({ onOpenAccess, onPromptChange, promptValue }: any) => {
   // Infinite Scroll Logic (Moved from main component for cleanliness)
   const [alerts, setAlerts] = useState<any[]>([]);
   const [page, setPage] = useState(1);
+  const [mounted, setMounted] = useState(false);
   const loaderRef = useRef(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const generateFakeAlerts = (p: number) => {
     const mutations = ["XBB.1.5", "BA.2.86", "JN.1", "H5N1-V2", "RSV-2026", "FLU-A-HS"];
@@ -93,6 +98,8 @@ const LandingView = ({ onOpenAccess, onPromptChange, promptValue }: any) => {
     if (loaderRef.current) observer.observe(loaderRef.current);
     return () => observer.disconnect();
   }, []);
+
+  if (!mounted) return null;
 
   return (
     <ViewTransition>
@@ -195,7 +202,7 @@ const DataFeedsView = () => (
             <div className="flex items-center space-x-4"><div className="flex items-center space-x-2"><div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" /><span className="text-green-400 font-mono text-xs">UPLINK ACTIVE</span></div><div className="text-white/40 font-mono text-xs">842 SEQ/MIN</div></div>
           </div>
           <div className="flex-1 overflow-y-auto space-y-2 font-mono text-sm">
-            {Array.from({ length: 20 }).map((_, i) => (
+            {mounted && Array.from({ length: 20 }).map((_, i) => (
               <div key={i} className="text-green-400/80 hover:text-green-400 transition-colors cursor-default">
                 <span className="text-white/20 mr-2">[{new Date().toLocaleTimeString()}]</span>
                 <span className="text-brand-blue mr-2">INGEST:</span>
@@ -426,6 +433,11 @@ export default function Home() {
   const [isSignupOpen, setIsSignupOpen] = useState(false);
   const [isAccessOpen, setIsAccessOpen] = useState(false);
   const [promptValue, setPromptValue] = useState("");
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const navItems = [
     { id: "home", label: "Home" },
@@ -437,6 +449,8 @@ export default function Home() {
     { id: "api-docs", label: "API Docs" },
     { id: "pricing", label: "Pricing" },
   ];
+
+  if (!mounted) return <div className="min-h-screen bg-white" />;
 
   const renderContent = () => {
     switch (currentView) {
