@@ -418,47 +418,6 @@ const PricingView = () => (
   </ViewTransition>
 );
 
-const READMEView = () => (
-  <ViewTransition>
-    <div className="pt-40 px-6 max-w-4xl mx-auto pb-32">
-      <div className="prose prose-slate max-w-none">
-        <SectionHeader title="Project Documentation" />
-        
-        <h3 className="text-2xl font-black text-brand-navy mt-12 mb-6">Project Overview</h3>
-        <p className="text-brand-gray font-medium leading-relaxed mb-8">
-          The **Vaccine Early-Warning Portal (VEWP)** is an enterprise-grade AI intelligence platform designed for pharmaceutical developers. 
-          By utilizing a heuristic-based mutation scoring engine, the portal can detect high-risk evasion mutations and suggest chemical adjuvant targets 
-          weeks before laboratory confirmation.
-        </p>
-
-        <h3 className="text-2xl font-black text-brand-navy mt-12 mb-6">Tech Stack</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12">
-          {[
-            { label: "React", icon: <Layout className="text-brand-blue" size={16} /> },
-            { label: "Next.js", icon: <Zap className="text-brand-blue" size={16} /> },
-            { label: "Tailwind CSS", icon: <Sparkles className="text-brand-blue" size={16} /> },
-            { label: "Framer Motion", icon: <Activity className="text-brand-blue" size={16} /> },
-            { label: "Lucide Icons", icon: <Globe className="text-brand-blue" size={16} /> },
-            { label: "TypeScript", icon: <Code className="text-brand-blue" size={16} /> },
-          ].map((tech, i) => (
-            <div key={i} className="bg-gray-50 p-4 rounded-xl flex items-center space-x-3 font-bold text-brand-navy border border-gray-100">
-              {tech.icon} <span>{tech.label}</span>
-            </div>
-          ))}
-        </div>
-
-        <h3 className="text-2xl font-black text-brand-navy mt-12 mb-6">How to Run Locally</h3>
-        <div className="bg-brand-navy rounded-2xl p-8 font-mono text-sm shadow-2xl">
-          <div className="text-white/40 mb-4 uppercase tracking-widest text-[10px]">Terminal</div>
-          <pre className="text-brand-blue/80 space-y-2">
-            <code>{`# Clone the repository\ngit clone https://github.com/pharma/vewp.git\n\n# Navigate to project\ncd vewp\n\n# Install dependencies\nnpm install\n\n# Start development server\nnpm run dev`}</code>
-          </pre>
-        </div>
-      </div>
-    </div>
-  </ViewTransition>
-);
-
 // --- Main Page Component ---
 
 export default function Home() {
@@ -477,7 +436,6 @@ export default function Home() {
     { id: "webhooks", label: "Webhooks" },
     { id: "api-docs", label: "API Docs" },
     { id: "pricing", label: "Pricing" },
-    { id: "readme", label: "README" },
   ];
 
   const renderContent = () => {
@@ -490,7 +448,6 @@ export default function Home() {
       case "webhooks": return <WebhooksView />;
       case "api-docs": return <APIDocsView />;
       case "pricing": return <PricingView />;
-      case "readme": return <READMEView />;
       default: return <LandingView />;
     }
   };
