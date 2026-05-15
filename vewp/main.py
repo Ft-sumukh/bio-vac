@@ -35,6 +35,16 @@ store = MemoryStore()
 scorer = RiskScorer()
 
 
+@app.get("/")
+def root():
+    return {
+        "message": "Welcome to the Vaccine Early-Warning Portal (VEWP) Backend API",
+        "documentation": "/docs",
+        "health_check": "/health",
+        "frontend_portal": "http://localhost:3000"
+    }
+
+
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "ok"}
