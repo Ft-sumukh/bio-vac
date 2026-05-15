@@ -1,56 +1,80 @@
-# Vaccine Early-Warning Portal (VEWP)
+# BI-VAC: Bio Intelligence Vaccine Early-Warning & Analysis Center
 
-An API-driven platform that ingests emerging mutation signals and **alerts vaccine/pharma developers** about **high-risk complement-evading variants**, with **adjuvant target suggestions** ahead of lab confirmation.
+BI-VAC is an enterprise-grade genomic surveillance and vaccine evasion analysis platform. It leverages AI-driven structural biology insights to identify high-risk viral mutations and suggest adjuvant targets before clinical data is available.
 
-## What’s in this repo (MVP scaffold)
+---
 
-- **FastAPI backend** with OpenAPI docs
-- **Ingest API** for mutation observations (from internal pipelines, GISAID-derived feeds, literature, etc.)
-- **Risk scoring pipeline** (stubbed with a deterministic scorer you can replace with ML/biophysics)
-- **Alerting** via webhooks (email stub included)
-- **Recommendations** endpoint for “adjuvant target” suggestions (rules-based stub)
+## 🏗️ Project Architecture
 
-## Quickstart
+The project is organized into a modular, production-ready structure:
 
-Prereqs: Python 3.11+ recommended (works on newer too)
-
-```bash
-python -m venv .venv
-.\.venv\Scripts\activate
-pip install -r requirements.txt
-uvicorn vewp.main:app --reload
+```text
+bio-vac/
+├── apps/
+│   ├── portal/             # Next.js: Main Intelligence Portal (formerly razorpay-hero)
+│   └── dashboard/          # Vite/React: Research & Surveillance Dashboard (formerly frontend)
+├── backend/                # FastAPI: Genomic Scoring & Alerting Engine
+│   ├── app/                # Core logic, models, and services
+│   ├── main.py             # API Entry point
+│   └── requirements.txt    # Python dependencies
+├── docs/                   # Documentation, research papers, and vision documents
+├── scripts/                # Orchestration and utility scripts
+├── .env.example            # Environment variable template
+├── docker-compose.yml      # Containerized orchestration
+└── README.md               # You are here
 ```
 
-Then open:
-- Swagger UI: `http://127.0.0.1:8000/docs`
-- Health: `http://127.0.0.1:8000/health`
+---
 
-## Minimal workflow (example)
+## 🚀 Getting Started
 
-1) Create a subscription (webhook):
+### Prerequisites
+- Node.js (v18+)
+- Python (v3.10+)
+- Git
 
-```bash
-curl -X POST http://127.0.0.1:8000/v1/subscriptions \
-  -H "Content-Type: application/json" \
-  -d "{\"org\":\"AcmeVax\",\"channel\":\"webhook\",\"endpoint\":\"https://example.com/hook\",\"min_risk\":0.75}"
-```
+### Local Development
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/Ft-sumukh/bio-vac.git
+   cd bio-vac
+   ```
 
-2) Ingest a mutation observation:
+2. **Run the Orchestration Script**:
+   Navigate to the `scripts` folder and run the start script:
+   ```powershell
+   ./scripts/start.bat
+   ```
+   This will automatically launch the Backend, the Portal, and the Dashboard in separate terminal windows.
 
-```bash
-curl -X POST http://127.0.0.1:8000/v1/observations \
-  -H "Content-Type: application/json" \
-  -d "{\"pathogen\":\"SARS-CoV-2\",\"protein\":\"S\",\"lineage\":\"XBB.1.5\",\"mutations\":[\"S:K417N\",\"S:E484K\"],\"region\":\"IN\",\"collection_date\":\"2026-05-01\",\"evidence\":{\"source\":\"genomic_feed\",\"confidence\":0.8}}"
-```
+---
 
-The server scores risk, stores it, and emits alerts to matching subscriptions.
+## 🌍 Deployment
 
-## Notes / next steps
+### Frontend (Next.js Portal)
+- **Service**: Vercel
+- **Root Directory**: `apps/portal`
+- **Environment Variables**:
+  - `NEXT_PUBLIC_API_URL`: Your deployed backend URL.
 
-- Replace the stub scorer in `vewp/scoring.py` with:
-  - complement evasion features (glycan shielding, charge patches, epitope disruption)
-  - antibody escape / antigenic distance
-  - growth advantage / prevalence trajectory
-  - structural priors (e.g., RBD exposure changes)
-- Wire real alert delivery (email/SMS/Slack) and durable storage (Postgres).
+### Backend (FastAPI)
+- **Service**: Render / Railway / Vercel
+- **Root Directory**: `backend`
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- **Environment Variables**:
+  - `FRONTEND_URL`: Your deployed portal URL.
 
+---
+
+## 🛡️ Key Features
+- **Real-Time Surveillance**: Streaming genomic ingest from GISAID/NCBI.
+- **Evasion Scoring**: Proprietary AI scoring based on structural biophysics.
+- **Adjuvant Targeting**: Automated chemistry recommendations for mutation escape.
+- **Enterprise Webhooks**: Integration for pharmaceutical R&D pipelines.
+
+---
+
+## 📜 License
+Proprietary Intelligence - BI-VAC Platform.
+Authored by **Antigravity AI**.

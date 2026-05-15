@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 from threading import RLock
 from uuid import uuid4
 
-from vewp.models import ObservationIn, ObservationOut, SubscriptionIn, SubscriptionOut
+from .models import ObservationIn, ObservationOut, SubscriptionIn, SubscriptionOut
 
 
 def _utcnow() -> datetime:

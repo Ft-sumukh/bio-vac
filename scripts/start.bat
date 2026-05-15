@@ -3,16 +3,16 @@ set "BASE_DIR=%~dp0"
 echo Starting Vaccine Early-Warning Portal from %BASE_DIR%...
 
 :: Start Research Dashboard (Vite)
-start cmd /k "title VEWP Research Dashboard && cd /d %BASE_DIR%frontend && npm run dev"
+start cmd /k "title VEWP Research Dashboard && cd /d %BASE_DIR%..\apps\dashboard && npm run dev"
 
 :: Start Intelligence Portal (Next.js)
-start cmd /k "title VEWP Intelligence Portal && cd /d %BASE_DIR%razorpay-hero && npm run dev"
+start cmd /k "title VEWP Intelligence Portal && cd /d %BASE_DIR%..\apps\portal && npm run dev"
 
 :: Start Backend API (FastAPI)
-start cmd /k "title VEWP Backend API && cd /d %BASE_DIR% && uvicorn vewp.main:app --reload --port 8000"
+start cmd /k "title VEWP Backend API && cd /d %BASE_DIR%..\backend && uvicorn main:app --reload --port 8000"
 
 echo.
-echo 🛡️  VEWP Launching...
+echo 🛡️  VEWP Launching in Production-Ready Structure...
 echo ------------------------------------------
 echo Intelligence Portal:  http://localhost:3000
 echo Research Dashboard:  http://localhost:5173

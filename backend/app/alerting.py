@@ -6,8 +6,8 @@ from typing import Iterable
 
 import httpx
 
-from vewp.models import AlertEvent, ObservationOut, SubscriptionOut
-from vewp.recommendations import suggest_adjuvant_targets
+from .models import AlertEvent, ObservationOut, SubscriptionOut
+from .recommendations import suggest_adjuvant_targets
 
 
 def _utcnow() -> datetime:

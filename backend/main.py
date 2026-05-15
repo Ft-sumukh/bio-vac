@@ -5,10 +5,10 @@ from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
 
-from vewp.alerting import emit_alerts
-from vewp.models import ObservationIn, ObservationOut, SubscriptionIn
-from vewp.scoring import RiskScorer
-from vewp.store import MemoryStore
+from app.alerting import emit_alerts
+from app.models import ObservationIn, ObservationOut, SubscriptionIn
+from app.scoring import RiskScorer
+from app.store import MemoryStore
 
 
 def _utcnow() -> datetime:

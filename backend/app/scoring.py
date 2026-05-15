@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from vewp.models import ObservationIn, RiskBand, RiskScore
+from .models import ObservationIn, RiskBand, RiskScore
 
 
 @dataclass(frozen=True)

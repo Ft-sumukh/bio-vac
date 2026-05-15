@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from vewp.models import ObservationOut
+from .models import ObservationOut
 
 
 def suggest_adjuvant_targets(observation: ObservationOut) -> list[str]:
