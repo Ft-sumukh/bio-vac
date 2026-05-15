@@ -10,14 +10,13 @@ The project is organized into a modular, production-ready structure:
 
 ```text
 bio-vac/
+├── frontend/               # [Frontend] Next.js Portal (Main UI)
+├── dashboard/              # [Frontend] Vite Dashboard (Research UI)
 ├── backend/                # [Backend Root] Set this as "Root Directory" in Vercel
 │   ├── api/                # FastAPI Entry Point (api/main.py)
 │   ├── app/                # Core Logic & Modules
 │   ├── requirements.txt    # Python dependencies
 │   └── vercel.json         # Backend deployment config
-├── apps/
-│   ├── portal/             # [Frontend] Next.js Portal
-│   └── dashboard/          # [Frontend] Vite Dashboard
 ├── docs/                   # Documentation & Research
 ├── scripts/                # Orchestration scripts
 └── README.md               # You are here
@@ -52,7 +51,7 @@ bio-vac/
 
 ### Frontend (Next.js Portal)
 - **Service**: Vercel
-- **Root Directory**: `apps/portal`
+- **Root Directory**: `frontend`
 - **Environment Variables**:
   - `NEXT_PUBLIC_API_URL`: Your deployed backend URL.
 
