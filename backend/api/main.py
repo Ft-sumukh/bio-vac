@@ -3,7 +3,12 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from uuid import uuid4
 
+import os
+import sys
 from fastapi import FastAPI, HTTPException
+
+# Add the parent directory to sys.path so 'app' can be found when running from 'api/main.py'
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.alerting import emit_alerts
 from app.models import ObservationIn, ObservationOut, SubscriptionIn
