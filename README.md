@@ -10,17 +10,15 @@ The project is organized into a modular, production-ready structure:
 
 ```text
 bio-vac/
+├── api/                    # [Backend] FastAPI Entry Point (api/main.py)
+├── app/                    # [Backend] Core Logic & Modules
 ├── apps/
-│   ├── portal/             # Next.js: Main Intelligence Portal (formerly razorpay-hero)
-│   └── dashboard/          # Vite/React: Research & Surveillance Dashboard (formerly frontend)
-├── backend/                # FastAPI: Genomic Scoring & Alerting Engine
-│   ├── app/                # Core logic, models, and services
-│   ├── main.py             # API Entry point
-│   └── requirements.txt    # Python dependencies
-├── docs/                   # Documentation, research papers, and vision documents
-├── scripts/                # Orchestration and utility scripts
-├── .env.example            # Environment variable template
-├── docker-compose.yml      # Containerized orchestration
+│   ├── portal/             # [Frontend] Next.js Portal
+│   └── dashboard/          # [Frontend] Vite Dashboard
+├── docs/                   # Documentation & Research
+├── scripts/                # Orchestration scripts
+├── requirements.txt        # Python dependencies
+├── vercel.json             # Deployment configuration
 └── README.md               # You are here
 ```
 
@@ -58,10 +56,10 @@ bio-vac/
   - `NEXT_PUBLIC_API_URL`: Your deployed backend URL.
 
 ### Backend (FastAPI)
-- **Service**: Render / Railway / Vercel
-- **Root Directory**: `backend`
+- **Service**: Vercel (Auto-detects `/api`)
+- **Root Directory**: `[Root]` (leave empty)
 - **Build Command**: `pip install -r requirements.txt`
-- **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+- **Start Command**: Managed by `vercel.json`
 - **Environment Variables**:
   - `FRONTEND_URL`: Your deployed portal URL.
 
