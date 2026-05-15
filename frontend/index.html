@@ -78,89 +78,163 @@
                 <!-- Tabs will be injected here -->
             </div>
             <div class="content-container">
-                <header>
-                    <div class="header-info">
-                        <h1>Bio-Intelligence Dashboard</h1>
-                        <p>Real-time complement-evasion monitoring & risk assessment.</p>
-                    </div>
-                    <div class="header-meta">
-                        <span class="mono" style="color: var(--cyber-teal);">STATUS: LIVE FEED ACTIVE</span>
-                    </div>
-                </header>
-
-                <div class="stat-cards">
-                    <div class="stat-card">
-                        <span class="stat-label">Sequences Scanned (24h)</span>
-                        <div class="stat-value">1,429,842</div>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label" style="color: var(--critical-red);">Active Evasion Alerts</span>
-                        <div class="stat-value" style="color: var(--critical-red);">42</div>
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-label">Top Adjuvant Targets</span>
-                        <div class="stat-value">18</div>
-                    </div>
-                </div>
-
-                <div class="map-container">
-                    <div class="viewer-label">Global Surveillance Network | Scanning...</div>
-                    <div class="scanline"></div>
-                    <div id="world-map-svg" class="world-map-wrapper">
-                        <!-- SVG map will be injected or drawn here -->
-                        <svg viewBox="0 0 1000 500" class="svg-map">
-                            <path d="M220,150 L230,140 L250,145 L260,160 L240,170 Z M400,100 L420,90 L450,95 L460,120 L430,130 Z" fill="rgba(0, 229, 255, 0.1)" stroke="rgba(0, 229, 255, 0.2)"/>
-                            <!-- Simplified world map paths -->
-                            <path class="map-path" d="M150,120 Q200,80 300,100 T500,120 T700,150 T900,100" fill="none" stroke="rgba(0, 229, 255, 0.05)" stroke-width="1"/>
-                        </svg>
-                    </div>
-                    <div id="map-markers-container"></div>
-                </div>
-
-                <div class="ticker-wrap">
-                    <div class="ticker-label">LIVE GENOMIC FEED</div>
-                    <div class="ticker" id="genomic-ticker">
-                        <!-- Ticker content injected here -->
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="panel-title">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--critical-red);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
-                        High-Risk Complement-Evading Mutations
-                    </div>
-                    <table class="alert-table">
-                        <thead>
-                            <tr>
-                                <th>Mutation ID</th>
-                                <th>Detection Date</th>
-                                <th>Evasion Score</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="alert-feed-body">
-                            <!-- Table rows injected here -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <div id="mutation-detail-panel" class="panel" style="display: none;">
-                    <div class="panel-title">Mutation Analysis: <span id="detail-mutation-id" class="mono" style="color: var(--cyber-teal);"></span></div>
-                    <div class="detail-grid">
-                        <div class="viewer-pane">
-                            <span class="viewer-label">Protein Structure Simulator</span>
-                            <!-- SVG Placeholder for 3D Viewer -->
-                            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--cyber-teal)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
-                                <path d="M12 2v20"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/><path d="M2 12h20"/><path d="m4 16 4-4-4-4"/><path d="m20 8-4 4 4 4"/>
-                            </svg>
-                            <div style="margin-top: 16px; font-size: 0.75rem; color: var(--text-muted);">HEURISTIC MODELING ACTIVE...</div>
+                <div id="page-dashboard" class="page-view">
+                    <header>
+                        <div class="header-info">
+                            <h1>Bio-Intelligence Dashboard</h1>
+                            <p>Real-time complement-evasion monitoring & risk assessment.</p>
                         </div>
-                        <div class="target-pane">
-                            <h3 style="margin-bottom: 20px; font-size: 1rem;">Adjuvant Target Recommendations</h3>
-                            <div id="target-recommendations-list" class="target-list">
-                                <!-- Targets injected here -->
+                        <div class="header-meta">
+                            <span class="mono" style="color: var(--cyber-teal);">STATUS: LIVE FEED ACTIVE</span>
+                        </div>
+                    </header>
+
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <span class="stat-label">Sequences Scanned (24h)</span>
+                            <div class="stat-value">1,429,842</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label" style="color: var(--critical-red);">Active Evasion Alerts</span>
+                            <div class="stat-value" style="color: var(--critical-red);">42</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Top Adjuvant Targets</span>
+                            <div class="stat-value">18</div>
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <div class="viewer-label">Global Surveillance Network | Scanning...</div>
+                        <div class="scanline"></div>
+                        <div id="world-map-svg" class="world-map-wrapper">
+                            <svg viewBox="0 0 1000 500" class="svg-map">
+                                <path d="M220,150 L230,140 L250,145 L260,160 L240,170 Z M400,100 L420,90 L450,95 L460,120 L430,130 Z" fill="rgba(0, 229, 255, 0.1)" stroke="rgba(0, 229, 255, 0.2)"/>
+                                <path class="map-path" d="M150,120 Q200,80 300,100 T500,120 T700,150 T900,100" fill="none" stroke="rgba(0, 229, 255, 0.05)" stroke-width="1"/>
+                            </svg>
+                        </div>
+                        <div id="map-markers-container"></div>
+                    </div>
+
+                    <div class="ticker-wrap">
+                        <div class="ticker-label">LIVE GENOMIC FEED</div>
+                        <div class="ticker" id="genomic-ticker"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-title">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--critical-red);"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+                            High-Risk Complement-Evading Mutations
+                        </div>
+                        <table class="alert-table">
+                            <thead>
+                                <tr>
+                                    <th>Mutation ID</th>
+                                    <th>Detection Date</th>
+                                    <th>Evasion Score</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="alert-feed-body"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="mutation-detail-panel" class="panel" style="display: none;">
+                        <div class="panel-title">Mutation Analysis: <span id="detail-mutation-id" class="mono" style="color: var(--cyber-teal);"></span></div>
+                        <div class="detail-grid">
+                            <div class="viewer-pane">
+                                <span class="viewer-label">Protein Structure Simulator</span>
+                                <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="var(--cyber-teal)" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;">
+                                    <path d="M12 2v20"/><path d="m16 4-4 4-4-4"/><path d="m8 20 4-4 4 4"/><path d="M2 12h20"/><path d="m4 16 4-4-4-4"/><path d="m20 8-4 4 4 4"/>
+                                </svg>
+                                <div style="margin-top: 16px; font-size: 0.75rem; color: var(--text-muted);">HEURISTIC MODELING ACTIVE...</div>
                             </div>
-                            <button class="btn-export">Export to Lab Inventory</button>
+                            <div class="target-pane">
+                                <h3 style="margin-bottom: 20px; font-size: 1rem;">Adjuvant Target Recommendations</h3>
+                                <div id="target-recommendations-list" class="target-list"></div>
+                                <button class="btn-export">Export to Lab Inventory</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Alerts Page -->
+                <div id="page-alerts" class="page-view" style="display: none;">
+                    <header>
+                        <div class="header-info">
+                            <h1>Active Evasion Alerts</h1>
+                            <p>Full-spectrum monitoring of all flagged genomic sequences.</p>
+                        </div>
+                    </header>
+                    <div class="panel">
+                        <div class="panel-title">Consolidated Alert Database</div>
+                        <table class="alert-table">
+                            <thead>
+                                <tr>
+                                    <th>Alert ID</th>
+                                    <th>Source</th>
+                                    <th>Location</th>
+                                    <th>Risk Level</th>
+                                </tr>
+                            </thead>
+                            <tbody id="full-alert-list">
+                                <tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 40px;">Synchronizing with global repositories...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Target Discovery Page -->
+                <div id="page-discovery" class="page-view" style="display: none;">
+                    <header>
+                        <div class="header-info">
+                            <h1>Target Discovery Lab</h1>
+                            <p>AI-suggested adjuvant components and delivery vectors.</p>
+                        </div>
+                    </header>
+                    <div class="stat-cards">
+                        <div class="stat-card">
+                            <span class="stat-label">Discovery Cycles</span>
+                            <div class="stat-value">482</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Valid Targets</span>
+                            <div class="stat-value">124</div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="stat-label">Success Rate</span>
+                            <div class="stat-value">92%</div>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-title">Computational Binding Predictions</div>
+                        <div style="color: var(--text-muted); padding: 40px; text-align: center; border: 1px dashed var(--glass-border);">
+                            INITIALIZING SIMULATION ENGINE...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webhook Settings Page -->
+                <div id="page-settings" class="page-view" style="display: none;">
+                    <header>
+                        <div class="header-info">
+                            <h1>System Configuration</h1>
+                            <p>Manage API integrations, webhooks, and security protocols.</p>
+                        </div>
+                    </header>
+                    <div class="panel" style="max-width: 600px;">
+                        <div class="panel-title">Webhook Integration</div>
+                        <div class="form-group">
+                            <label>Endpoint URL</label>
+                            <input type="text" placeholder="https://api.yourlab.com/webhooks" value="https://internal-pharma.vewp.io/v1/ingest">
+                        </div>
+                        <div class="form-group">
+                            <label>Secret Key (AES-256)</label>
+                            <input type="password" value="••••••••••••••••" readonly>
+                        </div>
+                        <div style="display: flex; gap: 12px;">
+                            <button class="btn-export" style="flex: 1;">Update Configuration</button>
+                            <button class="btn-action" style="padding: 14px 24px;">Test Uplink</button>
                         </div>
                     </div>
                 </div>

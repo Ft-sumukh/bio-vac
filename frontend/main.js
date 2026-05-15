@@ -149,8 +149,27 @@ const openTab = (id, title) => {
 const switchTab = (id) => {
   activeTabId = id
   renderTabs()
-  // Update view visibility if multiple views existed (currently we only have one dashboard structure)
-  // For now, we'll just update the header title to show navigation worked
+  
+  // Hide all page views
+  document.querySelectorAll('.page-view').forEach(view => {
+    view.style.display = 'none'
+  })
+  
+  // Show the active page view
+  const activeView = document.getElementById(`page-${id}`)
+  if (activeView) {
+    activeView.style.display = 'block'
+  }
+  
+  // Update sidebar active state
+  document.querySelectorAll('.nav-link').forEach(link => {
+    if (link.getAttribute('data-page') === id) {
+      link.classList.add('active')
+    } else {
+      link.classList.remove('active')
+    }
+  })
+
   const titleMap = {
     dashboard: 'Bio-Intelligence Dashboard',
     alerts: 'Live Alerts Feed',
