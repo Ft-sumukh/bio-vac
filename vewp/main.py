@@ -15,6 +15,7 @@ def _utcnow() -> datetime:
     return datetime.now(tz=timezone.utc)
 
 
+import os
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(
@@ -23,9 +24,16 @@ app = FastAPI(
     description="Ingest mutation observations, score complement-evasion risk, and emit alerts + adjuvant target suggestions.",
 )
 
+# Deployment logic: Allow the frontend URL from environment variables
+frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        frontend_url,
+        "http://localhost:3000",
+        "http://localhost:5173"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -41,7 +49,7 @@ def root():
         "message": "Welcome to the Vaccine Early-Warning Portal (VEWP) Backend API",
         "documentation": "/docs",
         "health_check": "/health",
-        "frontend_portal": "http://localhost:3000"
+        "frontend_portal": frontend_url
     }
 
 

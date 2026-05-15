@@ -34,6 +34,18 @@ export async function POST(req: Request) {
   try {
     const { prompt } = await req.json();
 
+    // If a production backend is provided, we can optionally forward requests there.
+    const backendUrl = process.env.BACKEND_API_URL;
+    if (backendUrl && prompt.startsWith("ACTUAL:")) {
+       // Example of how we would integrate with the FastAPI backend
+       const response = await fetch(`${backendUrl}/v1/observations`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+         body: JSON.stringify({ sequence: prompt.replace("ACTUAL:", "") })
+       });
+       return NextResponse.json(await response.json());
+    }
+
     // Simulate "Thinking" time for the LLM
     await new Promise(resolve => setTimeout(resolve, 1500));
 
