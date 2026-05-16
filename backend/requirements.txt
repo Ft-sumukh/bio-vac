@@ -8,3 +8,11 @@ sqlalchemy
 alembic
 httpx
 pytest
+langchain
+langchain-openai
+chromadb
+beautifulsoup4
+markdown
+unstructured
+langchain-huggingface
+sentence-transformers

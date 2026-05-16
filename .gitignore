@@ -1,0 +1,25 @@
+# Environments
+.env
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Dependencies
+node_modules/
+backend/.venv/
+.venv/
+
+# Build outputs
+.next/
+dist/
+build/
+*.pyc
+__pycache__/
+
+# DB
+backend/chroma_db/
+*.sqlite3
+
+# OS
+.DS_Store
+Thumbs.db

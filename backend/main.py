@@ -1,6 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes.v1 import surveillance
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+from routes.v1 import surveillance, assistant
 from config.settings import settings
 from monitoring.logging import logger
 
@@ -26,6 +30,11 @@ def create_application() -> FastAPI:
         surveillance.router, 
         prefix=f"{settings.API_V1_STR}/surveillance", 
         tags=["Surveillance"]
+    )
+    application.include_router(
+        assistant.router, 
+        prefix=f"{settings.API_V1_STR}/assistant", 
+        tags=["AI Assistant"]
     )
 
     @application.on_event("startup")

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { DashboardLayout } from "@/components/DashboardLayout";
+import { ChatAssistant } from "@/components/ChatAssistant";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,6 +30,7 @@ export default function RootLayout({
         <DashboardLayout>
           {children}
         </DashboardLayout>
+        <ChatAssistant />
       </body>
     </html>
   );

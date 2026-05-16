@@ -12,7 +12,8 @@ import {
   Filter,
   Download,
   Share2,
-  ArrowUpRight
+  ArrowUpRight,
+  Dna
 } from "lucide-react";
 import { GlassCard, StatCard } from "@/components/ui/StatCard";
 import { MOCK_ALERTS, ANALYTICS_DATA, REGIONAL_RISK } from "@/lib/mock";

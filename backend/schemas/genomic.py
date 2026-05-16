@@ -15,6 +15,7 @@ class GenomicObservation(GenomicObservationBase):
     risk_score: float
     lineage: Optional[str] = None
     evasion_potential: float
+    unique_features: Optional[dict] = None
     
     class Config:
         from_attributes = True
