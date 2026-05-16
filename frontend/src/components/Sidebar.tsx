@@ -108,6 +108,7 @@ export const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v:
                 href={item.path}
                 title={!isOpen ? item.label : undefined}
                 className={cn(
+                  `tour-step-${item.id}`,
                   "flex items-center px-4 py-3.5 rounded-xl transition-all duration-300 group relative",
                   isActive 
                     ? "bg-brand-blue/10 text-brand-blue border border-brand-blue/20 shadow-[inset_0_0_20px_rgba(0,210,255,0.05)]" 

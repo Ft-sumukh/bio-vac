@@ -21,12 +21,13 @@ import { MOCK_ALERTS, VARIANT_TRACKING_DATA } from "@/lib/mock";
 import CollabUnit from "@/components/CollabUnit";
 import SocialSentinel from "@/components/SocialSentinel";
 import { cn } from "@/lib/utils";
+import LiveDemoPlayer from "@/components/demo/LiveDemoPlayer";
 
 export default function Dashboard() {
   return (
     <div className="space-y-12 pb-20">
       {/* Hero Banner */}
-      <section className="relative h-80 rounded-[40px] overflow-hidden group">
+      <section className="relative h-80 rounded-[40px] overflow-hidden group tour-step-dashboard">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-brand-navy z-0 opacity-90" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 mix-blend-overlay" />
         
@@ -97,6 +98,10 @@ export default function Dashboard() {
           chartData={VARIANT_TRACKING_DATA} 
         />
       </div>
+
+      {/* Platform Demo Center */}
+      <LiveDemoPlayer />
+
 
       {/* Mission Control */}
       <section className="space-y-6">
