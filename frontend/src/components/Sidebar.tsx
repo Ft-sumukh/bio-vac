@@ -25,9 +25,11 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Intelligence Hub", icon: LayoutDashboard, path: "/" },
+  { id: "structural-genomics", label: "Structural Genomics", icon: Dna, path: "/structural-genomics" },
+  { id: "simulation", label: "Simulation Lab", icon: Crosshair, path: "/simulation-lab" },
   { id: "surveillance", label: "Global Surveillance", icon: Globe, path: "/surveillance" },
   { id: "vision", label: "Neural Vision Unit", icon: Eye, path: "/vision" },
-  { id: "mutations", label: "Mutation Analytics", icon: Dna, path: "/mutations" },
+  { id: "mutations", label: "Mutation Analytics", icon: Activity, path: "/mutations" },
   { id: "threats", label: "Threat Detection", icon: ShieldAlert, path: "/threats" },
   { id: "research", label: "AI Research Lab", icon: Zap, path: "/ai-research" },
   { id: "genomics", label: "Genomic Library", icon: Database, path: "/genomics" },

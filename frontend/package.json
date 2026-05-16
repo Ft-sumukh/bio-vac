@@ -11,9 +11,12 @@
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "@mediapipe/hands": "^0.4.1675469240",
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
     "@tensorflow-models/hand-pose-detection": "^2.0.1",
     "@tensorflow/tfjs": "^4.22.0",
     "@types/canvas-confetti": "^1.9.0",
+    "3dmol": "^2.5.4",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "d3-dsv": "^3.0.1",
