@@ -2,200 +2,225 @@
 
 import { motion } from "framer-motion";
 import { 
-  Zap, 
-  ShieldAlert, 
   Activity, 
-  Globe, 
+  ShieldAlert, 
+  Dna, 
   TrendingUp, 
-  Search,
-  Download,
+  Globe, 
+  Zap, 
   ArrowUpRight,
-  Dna,
-  Server,
-  Database,
-  Cpu,
-  Clock,
-  ExternalLink
+  ShieldCheck,
+  Target,
+  BarChart3,
+  Users
 } from "lucide-react";
 import { GlassCard, StatCard } from "@/components/ui/StatCard";
-import { 
-  AreaChart, 
-  Area, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer 
-} from 'recharts';
-import { THREAT_CARDS, EVOLUTIONARY_DATA } from "@/lib/data-generator";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { MOCK_ALERTS, MOCK_TARGETS, VARIANT_TRACKING_DATA } from "@/lib/mock";
+import CollabUnit from "@/components/CollabUnit";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
-export default function DashboardPage() {
-  const threatLevel = 8; // Scale 1-10
-
+export default function Dashboard() {
   return (
-    <div className="space-y-10 pb-20">
-      {/* Hero Banner: Global Threat Level */}
-      <section className="relative h-[250px] rounded-[40px] overflow-hidden group">
-         <div className="absolute inset-0 bg-gradient-to-br from-brand-blue/20 via-black to-red-500/10 z-0" />
-         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 z-0" />
-         
-         <div className="relative z-10 h-full flex flex-col justify-center px-12">
-            <div className="flex items-center space-x-3 mb-4">
-               <span className="px-4 py-1 bg-red-500 text-white text-[10px] font-black uppercase tracking-[0.3em] rounded-full animate-pulse">Critical Alert</span>
-               <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Global Bio-Security Status</span>
+    <div className="space-y-12 pb-20">
+      {/* Hero Banner - Strategic Threat Level */}
+      <section className="relative h-80 rounded-[40px] overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-brand-navy z-0 opacity-90" />
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 mix-blend-overlay" />
+        
+        <div className="relative z-10 h-full flex flex-col justify-center px-12 space-y-4">
+          <div className="flex items-center space-x-3">
+             <div className="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full border border-white/30 flex items-center space-x-2">
+                <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-white">Critical Surveillance Mode</span>
+             </div>
+             <span className="text-white/40 text-xs font-bold uppercase tracking-widest">Global Status: ELEVATED</span>
+          </div>
+          
+          <h1 className="text-7xl font-black tracking-tighter text-white uppercase leading-none">
+            Intelligence <span className="text-white/40">Hub</span>
+          </h1>
+          
+          <div className="flex items-center space-x-12 mt-4">
+             <div>
+                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">Current Threat Index</div>
+                <div className="text-5xl font-black text-white flex items-center space-x-2">
+                   <span>8.4</span>
+                   <ShieldAlert size={32} className="text-white/60" />
+                </div>
+             </div>
+             <div className="h-16 w-px bg-white/10" />
+             <div>
+                <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">Active Clusters</div>
+                <div className="text-5xl font-black text-white">12</div>
+             </div>
+             <div className="h-16 w-px bg-white/10" />
+             <div className="flex-1 max-w-sm">
+                <p className="text-xs font-medium text-white/60 leading-relaxed italic">
+                   "Significant reassortment detected in Southeast Asian avian clusters. Model consensus predicts 85% evasion probability."
+                </p>
+             </div>
+          </div>
+        </div>
+        
+        {/* Animated Background Pulse */}
+        <div className="absolute -right-20 -top-20 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-pulse" />
+      </section>
+
+      {/* KPI Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <StatCard 
+          title="Sequences Indexed" 
+          value="14,821,092" 
+          trend="+1.2M" 
+          icon={<Database className="text-brand-blue" />} 
+          chartData={VARIANT_TRACKING_DATA} 
+        />
+        <StatCard 
+          title="Viral Families" 
+          value="1,402" 
+          trend="Stable" 
+          icon={<Dna className="text-purple-500" />} 
+          chartData={VARIANT_TRACKING_DATA} 
+        />
+        <StatCard 
+          title="Evasion Signals" 
+          value="42" 
+          trend="+8 Critical" 
+          icon={<ShieldAlert className="text-red-500" />} 
+          chartData={VARIANT_TRACKING_DATA} 
+        />
+        <StatCard 
+          title="Model Confidence" 
+          value="98.4%" 
+          trend="+0.2%" 
+          icon={<Zap className="text-brand-blue" />} 
+          chartData={VARIANT_TRACKING_DATA} 
+        />
+      </div>
+
+      {/* Mission Control: Collaborative Strategy Board */}
+      <section className="space-y-6">
+         <div className="flex items-center justify-between px-2">
+            <div>
+               <h2 className="text-xl font-black uppercase tracking-widest text-white/60 flex items-center">
+                  <Users size={20} className="mr-3 text-brand-blue" />
+                  Mission Control <span className="mx-2 text-white/20">/</span> <span className="text-white/40 font-bold">Strategy Board</span>
+               </h2>
+               <p className="text-[10px] font-black uppercase text-white/20 tracking-widest mt-1">Real-time cross-institutional collaboration active</p>
             </div>
-            
-            <div className="flex items-end space-x-8">
-               <div>
-                  <h1 className="text-6xl font-black text-white tracking-tighter">LEVEL <span className="text-red-500">{threatLevel}.0</span></h1>
-                  <p className="text-white/40 font-medium max-w-md mt-2 italic">
-                    "Elevated genomic evasion detected in Southeast Asian clusters. Recommend immediate sequence intensification."
-                  </p>
-               </div>
-               
-               <div className="flex-1 max-w-md mb-2">
-                  <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-                     <motion.div 
-                        initial={{ width: 0 }}
-                        animate={{ width: `${threatLevel * 10}%` }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
-                        className="h-full bg-gradient-to-r from-brand-blue via-purple-500 to-red-500"
-                     />
-                  </div>
-                  <div className="flex justify-between mt-2 text-[10px] font-black uppercase tracking-widest text-white/20">
-                     <span>Safe (1.0)</span>
-                     <span>Outbreak (10.0)</span>
-                  </div>
-               </div>
+            <div className="flex items-center space-x-3">
+               <button className="px-6 py-3 bg-white/5 border border-white/5 rounded-xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-all">Join Live Session</button>
+               <button className="px-6 py-3 bg-brand-blue text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand-blue/20 hover:scale-105 transition-all">Host Mission</button>
             </div>
          </div>
+         <CollabUnit />
       </section>
 
-      {/* 4-Column KPI Grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard label="Sequences Indexed" value="14.8M" icon={Database} trend="+12.4%" color="brand-blue" />
-        <StatCard label="Viral Families" value="05" icon={Dna} trend="Stable" color="green-400" />
-        <StatCard label="High-Risk Variants" value="12" icon={ShieldAlert} trend="+2" color="red-500" />
-        <StatCard label="Model Confidence" value="94.2%" icon={Cpu} trend="+0.8%" color="purple-500" />
-      </section>
-
+      {/* Main Analytics Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Content: Timeline & Featured Threats */}
-        <div className="lg:col-span-8 space-y-8">
-           <GlassCard className="p-8 h-[450px]">
-              <div className="flex items-center justify-between mb-8">
+        {/* Evolutionary Phylodynamics */}
+        <div className="lg:col-span-8">
+           <GlassCard className="p-10 h-[500px]">
+              <div className="flex items-center justify-between mb-10">
                  <div>
-                    <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Variant Emergence Timeline</h3>
-                    <p className="text-[10px] text-white/20 font-bold mt-1 uppercase">12-Month Genomic Trajectory</p>
+                    <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Global Lineage Frequency</h3>
+                    <div className="text-[10px] font-bold text-brand-blue mt-1 uppercase tracking-widest">Real-time Phylodynamics Scan</div>
                  </div>
-                 <div className="flex items-center space-x-2">
-                    <div className="w-3 h-3 bg-brand-blue rounded-full" />
-                    <span className="text-[10px] font-bold text-white/40">Divergence Index</span>
+                 <div className="flex items-center space-x-6">
+                    <div className="flex items-center space-x-2">
+                       <span className="w-2 h-2 bg-brand-blue rounded-full" />
+                       <span className="text-[10px] font-black text-white/40 uppercase">Omicron</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                       <span className="w-2 h-2 bg-purple-500 rounded-full" />
+                       <span className="text-[10px] font-black text-white/40 uppercase">JN.1</span>
+                    </div>
                  </div>
               </div>
-              <div className="h-[300px] w-full">
+              <div className="h-[350px] w-full">
                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={EVOLUTIONARY_DATA}>
+                    <AreaChart data={VARIANT_TRACKING_DATA}>
                        <defs>
-                          <linearGradient id="colorDiv" x1="0" y1="0" x2="0" y2="1">
+                          <linearGradient id="colorBlue" x1="0" y1="0" x2="0" y2="1">
                              <stop offset="5%" stopColor="#00D2FF" stopOpacity={0.3}/>
                              <stop offset="95%" stopColor="#00D2FF" stopOpacity={0}/>
                           </linearGradient>
+                          <linearGradient id="colorPurple" x1="0" y1="0" x2="0" y2="1">
+                             <stop offset="5%" stopColor="#A855F7" stopOpacity={0.3}/>
+                             <stop offset="95%" stopColor="#A855F7" stopOpacity={0}/>
+                          </linearGradient>
                        </defs>
                        <CartesianGrid strokeDasharray="3 3" stroke="#ffffff05" vertical={false} />
-                       <XAxis dataKey="time" stroke="#ffffff20" fontSize={10} fontWeight="bold" />
+                       <XAxis dataKey="name" stroke="#ffffff20" fontSize={10} fontWeight="bold" />
                        <YAxis stroke="#ffffff20" fontSize={10} fontWeight="bold" />
                        <Tooltip 
                           contentStyle={{ backgroundColor: '#050505', border: '1px solid #ffffff10', borderRadius: '16px' }}
+                          itemStyle={{ fontSize: '10px', fontWeight: '900', textTransform: 'uppercase' }}
                        />
-                       <Area type="monotone" dataKey="divergence" stroke="#00D2FF" strokeWidth={4} fillOpacity={1} fill="url(#colorDiv)" />
+                       <Area type="monotone" dataKey="Omicron" stroke="#00D2FF" strokeWidth={3} fillOpacity={1} fill="url(#colorBlue)" />
+                       <Area type="monotone" dataKey="JN1" stroke="#A855F7" strokeWidth={3} fillOpacity={1} fill="url(#colorPurple)" />
                     </AreaChart>
                  </ResponsiveContainer>
               </div>
            </GlassCard>
-
-           <section className="space-y-6">
-              <div className="flex items-center justify-between">
-                 <h2 className="text-xl font-black uppercase tracking-widest text-white/60">Featured Threats</h2>
-                 <Link href="/threats" className="text-[10px] font-black uppercase tracking-widest text-brand-blue hover:underline">View All Intelligence</Link>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 {THREAT_CARDS.slice(0, 2).map((threat) => (
-                    <motion.div key={threat.id} whileHover={{ y: -5 }}>
-                       <GlassCard className="p-8 group">
-                          <div className="flex items-start justify-between mb-6">
-                             <div className="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center group-hover:bg-brand-blue/10 transition-colors">
-                                <ShieldAlert style={{ color: threat.color }} size={28} />
-                             </div>
-                             <div className="text-right">
-                                <div className="text-[10px] font-black uppercase tracking-widest text-white/20">Evasion Risk</div>
-                                <div className="text-3xl font-black text-white">{threat.risk}%</div>
-                             </div>
-                          </div>
-                          <h3 className="text-2xl font-black text-white mb-2">{threat.id}</h3>
-                          <p className="text-xs text-white/40 font-medium leading-relaxed mb-6">{threat.basis}</p>
-                          <div className="flex items-center justify-between pt-6 border-t border-white/5">
-                             <div className="flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest text-brand-blue">
-                                <Activity size={12} />
-                                <span>{threat.transmissibility}/10 Power</span>
-                             </div>
-                             <ArrowUpRight className="text-white/20 group-hover:text-white transition-colors" size={18} />
-                          </div>
-                       </GlassCard>
-                    </motion.div>
-                 ))}
-              </div>
-           </section>
         </div>
 
-        {/* Sidebar: System Health & Live Feed */}
-        <aside className="lg:col-span-4 space-y-8">
-           <GlassCard className="p-8">
-              <h3 className="text-sm font-black uppercase tracking-widest text-white/60 mb-8">System Health</h3>
-              <div className="space-y-6">
-                 <HealthItem icon={<Server size={16} />} label="Sequence Pipeline" status="Optimal" color="green-400" />
-                 <HealthItem icon={<Cpu size={16} />} label="Neural Inference" status="High Load" color="orange-400" />
-                 <HealthItem icon={<Database size={16} />} label="Global Archive Sync" status="99.9%" color="brand-blue" />
-                 <HealthItem icon={<Clock size={16} />} label="Last Global Scan" status="4m ago" color="white/40" />
-              </div>
-           </GlassCard>
-
-           <GlassCard className="p-8 bg-brand-blue/5 border-brand-blue/20">
-              <div className="flex items-center justify-between mb-8">
-                 <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Live Signal Detection</h3>
-                 <span className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
-              </div>
-              <div className="space-y-6">
-                 {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-start space-x-4">
-                       <div className="w-1.5 h-10 bg-brand-blue/20 rounded-full shrink-0" />
-                       <div>
-                          <div className="text-[10px] font-black uppercase tracking-widest text-brand-blue mb-1">Signal Cluster #{4800 + i}</div>
-                          <p className="text-xs font-bold text-white/80 line-clamp-1">Novel substitution detected in Southeast Asia.</p>
-                          <div className="text-[9px] font-medium text-white/20 uppercase mt-1">2m 42s ago • GISAID Sync</div>
-                       </div>
-                    </div>
+        {/* Live Signal Feed */}
+        <div className="lg:col-span-4">
+           <GlassCard className="p-10 h-full flex flex-col">
+              <h3 className="text-sm font-black uppercase tracking-widest text-white/60 mb-8 flex items-center">
+                 <Target className="text-red-500 mr-2" size={16} />
+                 Threat Signal Feed
+              </h3>
+              <div className="flex-1 space-y-6 overflow-y-auto pr-2 custom-scrollbar">
+                 {MOCK_ALERTS.map((alert, i) => (
+                   <motion.div 
+                     key={alert.id}
+                     initial={{ opacity: 0, x: 20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: i * 0.1 }}
+                     className="p-5 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all group cursor-pointer"
+                   >
+                      <div className="flex items-center justify-between mb-2">
+                         <span className="text-[10px] font-black text-brand-blue uppercase tracking-widest">{alert.id}</span>
+                         <span className="text-[9px] font-bold text-white/20 uppercase">{alert.date}</span>
+                      </div>
+                      <p className="text-xs font-bold text-white/60 line-clamp-2 leading-relaxed">{alert.details}</p>
+                      <div className="mt-4 flex items-center justify-between">
+                         <div className="flex items-center space-x-2">
+                            <ShieldAlert size={12} className="text-red-500" />
+                            <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">{alert.risk}% RISK</span>
+                         </div>
+                         <ArrowUpRight size={14} className="text-white/10 group-hover:text-white transition-colors" />
+                      </div>
+                   </motion.div>
                  ))}
               </div>
-              <button className="w-full mt-8 py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-all flex items-center justify-center space-x-2">
-                 <span>Explore Data Stream</span>
-                 <ExternalLink size={14} />
+              <button className="w-full py-5 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white transition-all mt-8">
+                 Access Global Signal Archive
               </button>
            </GlassCard>
-        </aside>
+        </div>
       </div>
     </div>
   );
 }
 
-const HealthItem = ({ icon, label, status, color }: any) => (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center space-x-3 text-white/40">
-      {icon}
-      <span className="text-xs font-bold">{label}</span>
-    </div>
-    <span className={cn("text-[10px] font-black uppercase tracking-widest", `text-${color}`)}>{status}</span>
-  </div>
+const Database = ({ className }: { className?: string }) => (
+  <svg 
+    width="24" 
+    height="24" 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <ellipse cx="12" cy="5" rx="9" ry="3" />
+    <path d="M3 5V19A9 3 0 0 0 21 19V5" />
+    <path d="M3 12A9 3 0 0 0 21 12" />
+  </svg>
 );

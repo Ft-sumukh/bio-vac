@@ -13,7 +13,9 @@ import {
   Zap,
   ChevronRight,
   Cpu,
-  Radio
+  Radio,
+  Eye,
+  Crosshair
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -22,6 +24,7 @@ import { cn } from "@/lib/utils";
 const NAV_ITEMS = [
   { id: "dashboard", label: "Intelligence Hub", icon: LayoutDashboard, path: "/" },
   { id: "surveillance", label: "Global Surveillance", icon: Globe, path: "/surveillance" },
+  { id: "vision", label: "Neural Vision Unit", icon: Eye, path: "/vision" },
   { id: "mutations", label: "Mutation Analytics", icon: Dna, path: "/mutations" },
   { id: "threats", label: "Threat Detection", icon: ShieldAlert, path: "/threats" },
   { id: "research", label: "AI Research Lab", icon: Zap, path: "/ai-research" },

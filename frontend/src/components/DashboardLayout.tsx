@@ -13,6 +13,7 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
     switch (pathname) {
       case '/': return 'Intelligence Hub';
       case '/surveillance': return 'Global Surveillance';
+      case '/vision': return 'Neural Vision Unit';
       case '/mutations': return 'Mutation Analytics';
       case '/threats': return 'Threat Detection';
       case '/ai-research': return 'Research Lab';
