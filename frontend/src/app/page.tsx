@@ -11,16 +11,29 @@ import {
   Search,
   Filter,
   Download,
-  Share2,
   ArrowUpRight,
-  Dna
+  Dna,
+  PieChart as PieChartIcon,
+  BarChart as BarChartIcon
 } from "lucide-react";
 import { GlassCard, StatCard } from "@/components/ui/StatCard";
-import { MOCK_ALERTS, ANALYTICS_DATA, REGIONAL_RISK } from "@/lib/mock";
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell
+} from 'recharts';
+import { MOCK_ALERTS, REGIONAL_RISK, VARIANT_TRACKING_DATA } from "@/lib/mock";
 import { cn, formatDate } from "@/lib/utils";
 
 export default function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
+
+  const barData = REGIONAL_RISK.map(r => ({ name: r.region, value: r.score, color: r.color }));
 
   return (
     <div className="space-y-10 pb-20">
@@ -52,9 +65,6 @@ export default function DashboardPage() {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <button className="p-3.5 bg-white/5 border border-white/5 rounded-xl hover:bg-white/10 transition-colors text-white/40 hover:text-white">
-            <Filter size={20} />
-          </button>
           <button className="p-3.5 bg-brand-blue text-white rounded-xl shadow-lg shadow-brand-blue/20 hover:scale-105 transition-all">
             <Download size={20} />
           </button>
@@ -63,15 +73,15 @@ export default function DashboardPage() {
 
       {/* Stats Grid */}
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard label="Critical Threats" value="12" icon={ShieldAlert} trend="+4" color="red-500" />
-        <StatCard label="Global Sequences" value="482.4k" icon={Activity} trend="+12.8%" color="brand-blue" />
+        <StatCard label="Critical Threats" value="08" icon={ShieldAlert} trend="+4" color="red-500" />
+        <StatCard label="Global Sequences" value="14.8M" icon={Activity} trend="+12.8%" color="brand-blue" />
         <StatCard label="Active Regions" value="142" icon={Globe} trend="Stable" color="green-400" />
-        <StatCard label="Evasion Score (Avg)" value="68.4" icon={TrendingUp} trend="+2.4" color="purple-500" />
+        <StatCard label="Evasion Score (Avg)" value="72.4" icon={TrendingUp} trend="+2.4" color="purple-500" />
       </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         {/* Main Feed */}
-        <section className="lg:col-span-2 space-y-8">
+        <section className="lg:col-span-8 space-y-8">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-black uppercase tracking-widest text-white/60">Live Detection Feed</h2>
             <button className="text-[10px] font-black uppercase tracking-widest text-brand-blue hover:underline">View All Records</button>
@@ -120,79 +130,52 @@ export default function DashboardPage() {
                        </div>
                     </div>
                   </div>
-                  
-                  {/* Progress Bar */}
-                  <div className="mt-6 h-1 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${alert.risk}%` }}
-                      className={cn(
-                        "h-full rounded-full",
-                        alert.risk > 85 ? "bg-red-500" : (alert.risk > 70 ? "bg-orange-500" : "bg-brand-blue")
-                      )}
-                    />
-                  </div>
                 </GlassCard>
               </motion.div>
             ))}
           </div>
         </section>
 
-        {/* Sidebar Widgets */}
-        <aside className="space-y-10">
-          {/* Regional Risk Widget */}
-          <GlassCard>
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Regional Analysis</h3>
-              <Globe size={16} className="text-brand-blue" />
-            </div>
-            <div className="space-y-6">
-              {REGIONAL_RISK.map((item) => (
-                <div key={item.region} className="space-y-2">
-                  <div className="flex justify-between items-end">
-                    <span className="text-xs font-bold text-white/80">{item.region}</span>
-                    <span className="text-xs font-mono font-black text-white/40">{item.score}%</span>
-                  </div>
-                  <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: `${item.score}%` }}
-                      className="h-full rounded-full"
-                      style={{ backgroundColor: item.color }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* Sidebar Analytics */}
+        <aside className="lg:col-span-4 space-y-10">
+          <GlassCard className="p-8 h-[400px]">
+             <div className="flex items-center justify-between mb-8">
+                <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Regional Evasion Map</h3>
+                <BarChartIcon size={16} className="text-brand-blue" />
+             </div>
+             <div className="h-[250px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                   <BarChart data={barData} layout="vertical">
+                      <XAxis type="number" hide />
+                      <YAxis dataKey="name" type="category" stroke="#ffffff40" fontSize={10} fontWeight="bold" width={80} />
+                      <Tooltip 
+                         cursor={{ fill: 'transparent' }}
+                         contentStyle={{ backgroundColor: '#0A0A0A', border: '1px solid #ffffff10', borderRadius: '12px' }}
+                      />
+                      <Bar dataKey="value" radius={[0, 4, 4, 0]} barSize={12}>
+                        {barData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Bar>
+                   </BarChart>
+                </ResponsiveContainer>
+             </div>
           </GlassCard>
 
-          {/* AI Chat Widget Preview */}
-          <GlassCard className="bg-brand-blue/10 border-brand-blue/20">
+          <GlassCard className="bg-brand-blue/10 border-brand-blue/20 p-8">
              <div className="flex items-center space-x-3 mb-4">
                 <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center shadow-lg shadow-brand-blue/30">
                    <Zap size={16} className="text-white fill-current" />
                 </div>
-                <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Assistant</h3>
+                <h3 className="text-sm font-black uppercase tracking-widest text-white">AI Analyst Briefing</h3>
              </div>
-             <p className="text-xs font-medium text-white/60 leading-relaxed mb-6">
-                Analyzing recent structural shifts in Spike glycoproteins. I detected a potential evasion motif in XBB.1.5 clusters.
+             <p className="text-xs font-medium text-white/60 leading-relaxed mb-6 italic">
+                "Spike glycoprotein shifts in XBB clusters indicate a 12% increase in ACE2 binding affinity. Recommend immediate update to mRNA targeting sequences."
              </p>
              <button className="w-full bg-white text-brand-navy py-3 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-brand-blue hover:text-white transition-all">
-                Open Full Analysis
+                Generate Full Report
              </button>
           </GlassCard>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-2 gap-4">
-            <button className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all group">
-              <Share2 size={20} className="text-white/40 group-hover:text-brand-blue mb-2" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Export</span>
-            </button>
-            <button className="flex flex-col items-center justify-center p-6 bg-white/5 border border-white/5 rounded-2xl hover:bg-white/10 transition-all group">
-              <Activity size={20} className="text-white/40 group-hover:text-brand-blue mb-2" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Refresh</span>
-            </button>
-          </div>
         </aside>
       </div>
     </div>
