@@ -8,20 +8,11 @@ services:
     volumes:
       - ./backend:/app
 
-  portal:
-    build: ./apps/portal
+  frontend:
+    build: ./frontend
     ports:
       - "3000:3000"
     environment:
       - NEXT_PUBLIC_API_URL=http://backend:8000
-    depends_on:
-      - backend
-
-  dashboard:
-    build: ./apps/dashboard
-    ports:
-      - "5173:5173"
-    environment:
-      - VITE_API_URL=http://backend:8000
     depends_on:
       - backend

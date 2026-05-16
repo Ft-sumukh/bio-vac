@@ -18,9 +18,14 @@ import {
   Brain,
   ShieldCheck,
   MousePointer2,
-  Volume2
+  Volume2,
+  Mic,
+  Download
 } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import confetti from 'canvas-confetti';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 /**
  * BI-VAC Supreme Demo Component
@@ -40,11 +45,13 @@ export function BIVACSupremeDemo() {
   const [gameScore, setGameScore] = useState(0);
   const [gesture, setGesture] = useState('NEUTRAL');
   const [isDemo, setIsDemo] = useState(false);
+  const [voiceActive, setVoiceActive] = useState(false);
 
   // Refs
   const cameraVideoRef = useRef<HTMLVideoElement>(null);
   const proteinCanvasRef = useRef<HTMLCanvasElement>(null);
   const collaborationCanvasRef = useRef<HTMLCanvasElement>(null);
+  const reportRef = useRef<HTMLDivElement>(null);
 
   // ============================================================================
   // SOUND EFFECTS ENGINE
@@ -73,6 +80,71 @@ export function BIVACSupremeDemo() {
   const notify = (msg: string, type: 'success' | 'error' | 'info' = 'info') => {
     playSound(type === 'success' ? 800 : type === 'error' ? 200 : 500, 150);
     showNotification(msg, type);
+  };
+
+  const generatePDFReport = async () => {
+    if (!reportRef.current) return;
+    notify('📄 Generating Intelligence Report PDF...', 'info');
+    try {
+      const canvas = await html2canvas(reportRef.current, { scale: 2, useCORS: true });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({ orientation: 'landscape' });
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('BI-VAC_Intelligence_Report.pdf');
+      notify('✅ Report generated successfully', 'success');
+    } catch (err) {
+      notify('❌ Failed to generate report', 'error');
+    }
+  };
+
+  const toggleVoiceCommands = () => {
+    if (!('webkitSpeechRecognition' in window)) {
+      notify('❌ Voice commands not supported in this browser', 'error');
+      return;
+    }
+    
+    if (voiceActive) {
+      setVoiceActive(false);
+      notify('🎤 Voice commands deactivated', 'info');
+      return;
+    }
+    
+    const recognition = new (window as any).webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => {
+      setVoiceActive(true);
+      notify('🎤 Listening for voice commands...', 'info');
+    };
+    
+    recognition.onresult = (event: any) => {
+      const command = event.results[0][0].transcript.toLowerCase();
+      notify(`Voice input: "${command}"`, 'info');
+      
+      if (command.includes('camera') || command.includes('vision')) setActiveTab('camera');
+      else if (command.includes('predict') || command.includes('ai')) setActiveTab('prediction');
+      else if (command.includes('protein') || command.includes('3d')) setActiveTab('protein');
+      else if (command.includes('collaborat')) setActiveTab('collaboration');
+      else if (command.includes('game') || command.includes('train')) setActiveTab('game');
+      else if (command.includes('report') || command.includes('pdf')) generatePDFReport();
+      else if (command.includes('demo')) startDemoMode();
+      
+      setVoiceActive(false);
+    };
+    
+    recognition.onerror = () => {
+      setVoiceActive(false);
+    };
+    
+    recognition.onend = () => {
+      setVoiceActive(false);
+    };
+    
+    recognition.start();
   };
 
   // ============================================================================
@@ -279,7 +351,7 @@ export function BIVACSupremeDemo() {
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12" ref={reportRef}>
       {/* Header Section */}
       <section className="flex flex-col md:flex-row items-center justify-between gap-8">
         <div className="text-center md:text-left">
@@ -293,22 +365,45 @@ export function BIVACSupremeDemo() {
            </p>
         </div>
 
-        <button 
-          onClick={startDemoMode}
-          disabled={isDemo}
-          className={cn(
-            "group relative px-12 py-6 rounded-[32px] overflow-hidden transition-all duration-500",
-            isDemo ? "bg-white/5 opacity-50 cursor-not-allowed" : "bg-brand-blue hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(0,210,255,0.4)]"
-          )}
-        >
-           <div className="relative z-10 flex items-center space-x-4">
-              {isDemo ? <Activity className="animate-spin text-white" /> : <Play className="fill-current text-white" />}
-              <span className="text-sm font-black uppercase tracking-[0.2em] text-white">
-                {isDemo ? "Demo Running..." : "Start Global Demo"}
-              </span>
-           </div>
-           <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-        </button>
+        <div className="flex flex-col md:flex-row items-center gap-4">
+          <button 
+            onClick={startDemoMode}
+            disabled={isDemo}
+            className={cn(
+              "group relative px-12 py-6 rounded-[32px] overflow-hidden transition-all duration-500",
+              isDemo ? "bg-white/5 opacity-50 cursor-not-allowed" : "bg-brand-blue hover:scale-105 active:scale-95 shadow-[0_0_40px_rgba(0,210,255,0.4)]"
+            )}
+          >
+             <div className="relative z-10 flex items-center space-x-4">
+                {isDemo ? <Activity className="animate-spin text-white" /> : <Play className="fill-current text-white" />}
+                <span className="text-sm font-black uppercase tracking-[0.2em] text-white">
+                  {isDemo ? "Demo Running..." : "Start Global Demo"}
+                </span>
+             </div>
+             <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+          </button>
+          
+          <div className="flex space-x-4">
+            <button 
+              onClick={toggleVoiceCommands}
+              className={cn(
+                "p-6 rounded-[32px] transition-all duration-300",
+                voiceActive ? "bg-red-500/20 text-red-500 border border-red-500/50 animate-pulse shadow-[0_0_20px_rgba(239,68,68,0.4)]" : "bg-white/5 border border-white/5 text-white/60 hover:text-white hover:bg-white/10"
+              )}
+              title="Voice Commands"
+            >
+              <Mic size={24} />
+            </button>
+            
+            <button 
+              onClick={generatePDFReport}
+              className="p-6 rounded-[32px] bg-white/5 border border-white/5 text-white/60 hover:text-white hover:bg-white/10 transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+              title="Export PDF Report"
+            >
+              <Download size={24} />
+            </button>
+          </div>
+        </div>
       </section>
 
       {/* Main Tabs */}
@@ -475,6 +570,12 @@ export function BIVACSupremeDemo() {
                         key={opt}
                         onClick={() => {
                           setGameScore(s => s + 100);
+                          confetti({
+                            particleCount: 100,
+                            spread: 70,
+                            origin: { y: 0.6 },
+                            colors: ['#00D2FF', '#ffffff', '#FF1744']
+                          });
                           notify('✅ Correct analysis! +100 Points', 'success');
                         }}
                         className="p-10 bg-white/5 border border-white/5 rounded-[32px] hover:bg-brand-blue hover:border-brand-blue transition-all group"
