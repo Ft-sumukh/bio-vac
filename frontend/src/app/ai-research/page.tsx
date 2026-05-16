@@ -54,7 +54,7 @@ export default function AIResearchPage() {
             <BrainCircuit size={14} className="fill-current" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Advanced Neural Modeling Lab</span>
           </div>
-          <h1 className="text-5xl font-black tracking-tight text-white">Research <span className="text-white/40">Lab</span></h1>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">Research <span className="text-white/40 block sm:inline">Lab</span></h1>
           <p className="text-white/40 mt-2 font-medium max-w-xl">
             Benchmarking predictive architectures and visualizing high-dimensional mutation clusters in 3D.
           </p>
@@ -63,7 +63,7 @@ export default function AIResearchPage() {
         <div className="flex items-center space-x-4">
            <button className="flex items-center space-x-2 px-6 py-3.5 bg-purple-600 text-white rounded-xl shadow-lg shadow-purple-600/20 hover:scale-105 transition-all">
               <Sparkles size={18} />
-              <span className="text-xs font-black uppercase tracking-widest">Run Prediction</span>
+              <span className="text-[10px] md:text-xs font-black uppercase tracking-widest">Run Prediction</span>
            </button>
         </div>
       </section>
@@ -71,7 +71,7 @@ export default function AIResearchPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* 3D Protein Viewer */}
         <div className="lg:col-span-8">
-           <GlassCard className="p-0 h-[600px] overflow-hidden">
+           <GlassCard className="p-0 h-[400px] md:h-[600px] overflow-hidden">
               <ProteinViewer />
            </GlassCard>
         </div>

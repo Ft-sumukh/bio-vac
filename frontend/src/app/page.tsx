@@ -31,36 +31,36 @@ export default function Dashboard() {
         <div className="absolute inset-0 bg-gradient-to-r from-red-600 via-red-500 to-brand-navy z-0 opacity-90" />
         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30 mix-blend-overlay" />
         
-        <div className="relative z-10 h-full flex flex-col justify-center px-12 space-y-4">
+        <div className="relative z-10 h-full flex flex-col justify-center px-6 md:px-12 space-y-4">
           <div className="flex items-center space-x-3">
              <div className="px-4 py-1.5 bg-white/20 backdrop-blur-md rounded-full border border-white/30 flex items-center space-x-2">
                 <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white">Critical Surveillance Mode</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-white">Critical Surveillance</span>
              </div>
-             <span className="text-white/40 text-xs font-bold uppercase tracking-widest">Global Status: ELEVATED</span>
+             <span className="hidden md:inline text-white/40 text-xs font-bold uppercase tracking-widest">Global Status: ELEVATED</span>
           </div>
           
-          <h1 className="text-7xl font-black tracking-tighter text-white uppercase leading-none">
-            Intelligence <span className="text-white/40">Hub</span>
+          <h1 className="text-5xl md:text-7xl font-black tracking-tighter text-white uppercase leading-none">
+            Intelligence <span className="text-white/40 block sm:inline">Hub</span>
           </h1>
           
-          <div className="flex items-center space-x-12 mt-4">
+          <div className="flex flex-row flex-wrap sm:flex-nowrap items-center gap-6 sm:gap-12 mt-4">
              <div>
                 <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">Current Threat Index</div>
-                <div className="text-5xl font-black text-white flex items-center space-x-2">
+                <div className="text-4xl md:text-5xl font-black text-white flex items-center space-x-2">
                    <span>8.4</span>
-                   <ShieldAlert size={32} className="text-white/60" />
+                   <ShieldAlert size={28} className="text-white/60 hidden sm:block" />
                 </div>
              </div>
-             <div className="h-16 w-px bg-white/10" />
+             <div className="hidden sm:block h-16 w-px bg-white/10" />
              <div>
                 <div className="text-[10px] font-black uppercase tracking-[0.3em] text-white/40 mb-1">Active Clusters</div>
-                <div className="text-5xl font-black text-white">12</div>
+                <div className="text-4xl md:text-5xl font-black text-white">12</div>
              </div>
-             <div className="h-16 w-px bg-white/10" />
-             <div className="flex-1 max-w-sm">
+             <div className="hidden md:block h-16 w-px bg-white/10" />
+             <div className="flex-1 max-w-sm hidden lg:block">
                 <p className="text-xs font-medium text-white/60 leading-relaxed italic">
-                   "Significant reassortment detected in Southeast Asian avian clusters. Model consensus predicts 85% evasion probability."
+                   &quot;Significant reassortment detected in Southeast Asian avian clusters. Model consensus predicts 85% evasion probability.&quot;
                 </p>
              </div>
           </div>

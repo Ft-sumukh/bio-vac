@@ -47,7 +47,7 @@ export default function SurveillancePage() {
             <Globe size={14} className="fill-current" />
             <span className="text-[10px] font-black uppercase tracking-[0.3em]">Geospatial Surveillance Engine</span>
           </div>
-          <h1 className="text-5xl font-black tracking-tight text-white">Global <span className="text-white/40">Surveillance</span></h1>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-white">Global <span className="text-white/40 block sm:inline">Surveillance</span></h1>
           <p className="text-white/40 mt-2 font-medium max-w-xl">
             Real-time monitoring of variant migration and regional outbreak intensity across 142 territories.
           </p>
@@ -67,7 +67,7 @@ export default function SurveillancePage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Map Container */}
         <div className="lg:col-span-8">
-           <GlassCard className="p-0 h-[650px] relative overflow-hidden bg-black/60 border-brand-blue/20">
+           <GlassCard className="p-0 h-[400px] md:h-[650px] relative overflow-hidden bg-black/60 border-brand-blue/20">
               {/* Map UI Overlays */}
               <div className="absolute top-8 left-8 z-20 space-y-4">
                  <GlassCard className="p-4 bg-black/40 backdrop-blur-3xl border-white/10 w-48">
@@ -122,7 +122,7 @@ export default function SurveillancePage() {
               </div>
 
               {/* Time Slider Mock */}
-              <div className="absolute bottom-8 left-8 right-8 z-20">
+              <div className="absolute bottom-4 md:bottom-8 left-4 md:left-8 right-4 md:right-8 z-20 hidden sm:block">
                  <GlassCard className="p-6 bg-black/80 backdrop-blur-3xl border-white/10">
                     <div className="flex items-center justify-between mb-4">
                        <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Historical Playback</span>
@@ -176,7 +176,7 @@ export default function SurveillancePage() {
                           <div className="p-6 bg-white/5 rounded-2xl border border-white/5">
                              <div className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2">Molecular Profile</div>
                              <p className="text-xs font-medium text-white/60 leading-relaxed italic">
-                                "High frequency of Spike-E484K detected in wastewater samples. Evasion buffer calculation suggests imminent vaccine breakthrough clusters."
+                                &quot;High frequency of Spike-E484K detected in wastewater samples. Evasion buffer calculation suggests imminent vaccine breakthrough clusters.&quot;
                              </p>
                           </div>
 
@@ -217,11 +217,11 @@ export default function SurveillancePage() {
   );
 }
 
-const MapModeButton = ({ label, active, onClick }: any) => (
+const MapModeButton = ({ label, active, onClick }: { label: string, active: boolean, onClick: () => void }) => (
   <button 
     onClick={onClick}
     className={cn(
-      "px-6 py-2.5 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+      "px-3 md:px-6 py-2.5 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all",
       active ? "bg-brand-blue text-white shadow-lg shadow-brand-blue/20" : "text-white/40 hover:text-white"
     )}
   >
@@ -229,7 +229,7 @@ const MapModeButton = ({ label, active, onClick }: any) => (
   </button>
 );
 
-const LayerToggle = ({ icon, label, active = false }: any) => (
+const LayerToggle = ({ icon, label, active = false }: { icon: React.ReactNode, label: string, active?: boolean }) => (
   <div className="flex items-center justify-between group cursor-pointer">
      <div className="flex items-center space-x-3 text-white/40 group-hover:text-white transition-colors">
         {icon}

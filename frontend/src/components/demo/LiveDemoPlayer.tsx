@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
-// @ts-ignore
+// @ts-expect-error
 const Joyride: any = dynamic(() => import('react-joyride').then((mod: any) => ({ default: mod.Joyride || mod.default })), { ssr: false });
 import { 
   Play, Pause, SkipForward, Maximize, Minimize, Volume2, VolumeX, 
@@ -79,7 +79,7 @@ export default function LiveDemoPlayer() {
     utterance.pitch = 1.1; // Slightly higher pitch
     
     // Simulate live subtitles
-    let words = text.split(' ');
+    const words = text.split(' ');
     let currentWord = 0;
     const subtitleInterval = setInterval(() => {
       if (currentWord <= words.length) {
@@ -442,7 +442,7 @@ export default function LiveDemoPlayer() {
                     {[1,2,3,4,5].map(i => (
                       <motion.div 
                         key={i}
-                        animate={{ height: ['4px', `${Math.random() * 20 + 10}px`, '4px'] }}
+                        animate={{ height: ['4px', `${(i * 7 % 20) + 10}px`, '4px'] }}
                         transition={{ duration: 0.5, repeat: Infinity, delay: i * 0.1 }}
                         className="w-1.5 bg-brand-blue rounded-full"
                       />

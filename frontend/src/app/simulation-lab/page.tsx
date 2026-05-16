@@ -29,7 +29,7 @@ export default function SimulationLab() {
 
   // --- GAME LOOP ---
   useEffect(() => {
-    let interval: any;
+    let interval: NodeJS.Timeout;
     if ((gameState === 'PLAYING_A' || gameState === 'PLAYING_B') && time > 0 && health > 0) {
       interval = setInterval(() => {
         setTime(prev => prev - 1);
@@ -239,9 +239,9 @@ export default function SimulationLab() {
                 className="absolute inset-0 bg-purple-500/20 blur-3xl -z-10"
               />
               <div className="text-[10px] font-black uppercase tracking-[0.4em] text-white/40 mb-4">Target Pathogen RNA</div>
-              <div className="flex space-x-4 justify-center font-mono text-5xl font-black text-white tracking-widest">
+              <div className="flex flex-wrap gap-2 md:gap-4 justify-center font-mono text-3xl md:text-5xl font-black text-white tracking-widest">
                 {targetSequence.split('-').map((codon, i) => (
-                  <span key={i} className="px-4 py-2 bg-white/5 border border-white/10 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                  <span key={i} className="px-3 md:px-4 py-2 bg-white/5 border border-white/10 rounded-xl shadow-[0_0_20px_rgba(255,255,255,0.05)]">
                     {codon}
                   </span>
                 ))}
@@ -251,12 +251,12 @@ export default function SimulationLab() {
             {/* Player Input Area */}
             <div className="flex flex-col items-center">
               <div className="text-[10px] font-black uppercase tracking-[0.4em] text-brand-blue mb-4">Synthesize mRNA Vaccine Template</div>
-              <div className="flex space-x-4 justify-center font-mono text-3xl font-black text-brand-blue tracking-widest mb-12 h-16">
+              <div className="flex flex-wrap gap-2 md:gap-4 justify-center font-mono text-2xl md:text-3xl font-black text-brand-blue tracking-widest mb-12 min-h-16">
                 {playerSequence ? playerSequence.split('-').map((codon, i) => (
                   <motion.span 
                     key={i} 
                     initial={{ scale: 0 }} animate={{ scale: 1 }}
-                    className="px-4 py-2 bg-brand-blue/10 border border-brand-blue/30 rounded-xl"
+                    className="px-3 md:px-4 py-2 bg-brand-blue/10 border border-brand-blue/30 rounded-xl"
                   >
                     {codon}
                   </motion.span>
@@ -264,12 +264,12 @@ export default function SimulationLab() {
               </div>
 
               {/* Codon Keyboard */}
-              <div className="grid grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 md:gap-4">
                 {['AUG', 'GCC', 'UAA', 'CGC', 'UAG', 'GCA'].map(codon => (
                   <button
                     key={codon}
                     onClick={() => handleRNAInput(codon)}
-                    className="px-8 py-4 bg-white/5 hover:bg-brand-blue/20 hover:border-brand-blue/50 border border-white/10 rounded-2xl font-mono text-xl font-bold text-white transition-all active:scale-95"
+                    className="px-4 md:px-8 py-3 md:py-4 bg-white/5 hover:bg-brand-blue/20 hover:border-brand-blue/50 border border-white/10 rounded-2xl font-mono text-lg md:text-xl font-bold text-white transition-all active:scale-95"
                   >
                     {codon}
                   </button>

@@ -11,13 +11,13 @@ import { useHandTracking } from '@/hooks/useHandTracking';
 import GestureIntelligencePanel from '@/components/genomics/GestureIntelligencePanel';
 
 // --- CUSTOM 3D COMPONENTS ---
-const ProteinModel = ({ mode, mutationActive, setHoveredAA }: any) => {
+const ProteinModel = ({ mode, mutationActive, setHoveredAA }: { mode: string, mutationActive: boolean, setHoveredAA: (atom: any) => void }) => {
   const groupRef = useRef<THREE.Group>(null);
   const { clock } = useThree();
 
   const atoms = useMemo(() => {
     const points = [];
-    let currentPoint = new THREE.Vector3(0, -10, 0);
+    const currentPoint = new THREE.Vector3(0, -10, 0);
     for (let i = 0; i < 400; i++) {
       const angle = i * 0.5;
       const radius = 3 + Math.sin(i * 0.1) * 2;
@@ -130,12 +130,12 @@ export default function StructuralGenomics() {
   const { state: trackingState, enableTracking, disableTracking } = useHandTracking(videoRef, canvasRef, containerRef);
 
   return (
-    <div className="h-[calc(100vh-4rem)] flex gap-6 overflow-hidden pb-6">
+    <div className="flex flex-col lg:flex-row gap-6 lg:h-[calc(100vh-4rem)] pb-6 lg:overflow-hidden">
       
       {/* LEFT SIDE: 3D VIEWPORT */}
       <div 
         ref={containerRef}
-        className="flex-1 relative rounded-[40px] overflow-hidden border border-brand-blue/20 bg-black/80 shadow-[0_0_50px_rgba(0,210,255,0.05)] touch-none"
+        className="flex-1 relative rounded-[40px] overflow-hidden border border-brand-blue/20 bg-black/80 shadow-[0_0_50px_rgba(0,210,255,0.05)] touch-none min-h-[500px]"
       >
         <div className="absolute inset-0 pointer-events-none z-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay" />
         <div className="absolute inset-0 pointer-events-none z-10 box-border border-[2px] border-white/5 rounded-[40px]" />
@@ -252,7 +252,7 @@ export default function StructuralGenomics() {
       </div>
 
       {/* RIGHT SIDE: Layout Column */}
-      <div className="w-80 flex flex-col space-y-6 overflow-y-auto custom-scrollbar pr-2 pb-2">
+      <div className="w-full lg:w-80 flex flex-col space-y-6 lg:overflow-y-auto custom-scrollbar pr-2 pb-2">
         
         {/* New Gesture Intelligence Panel */}
         <GestureIntelligencePanel 

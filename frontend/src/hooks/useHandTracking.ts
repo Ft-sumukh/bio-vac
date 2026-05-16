@@ -25,7 +25,7 @@ export function useHandTracking(videoRef: React.RefObject<HTMLVideoElement>, can
   const handsRef = useRef<any>(null);
   const cameraRef = useRef<any>(null);
   const frameCountRef = useRef(0);
-  const lastTimeRef = useRef(performance.now());
+  const lastTimeRef = useRef(0);
   
   // Smoothing & State buffers
   const isInteractingRef = useRef(false);

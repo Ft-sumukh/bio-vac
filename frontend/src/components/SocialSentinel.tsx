@@ -68,7 +68,7 @@ export default function SocialSentiment() {
             <span className="text-[10px] font-black text-white uppercase tracking-widest">Predictive Outbreak Signal</span>
          </div>
          <p className="text-[10px] font-medium text-white/40 leading-relaxed italic">
-            "Spike in keyword 'unexplained fever' detected in Northern India (+420% in 6h). Correlation with avian cluster #4201: High (0.89)."
+            &quot;Spike in keyword &apos;unexplained fever&apos; detected in Northern India (+420% in 6h). Correlation with avian cluster #4201: High (0.89).&quot;
          </p>
       </div>
     </div>

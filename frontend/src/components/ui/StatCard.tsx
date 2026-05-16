@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export const GlassCard = ({ children, className }: { children: React.ReactNode; className?: string }) => (
@@ -16,7 +15,7 @@ export const GlassCard = ({ children, className }: { children: React.ReactNode; 
   </div>
 );
 
-export const StatCard = ({ label, value, icon: Icon, trend, color = "brand-blue" }: any) => (
+export const StatCard = ({ label, value, icon: Icon, trend, color = "brand-blue" }: { label: string, value: string | number, icon: any, trend?: string, color?: string, chartData?: any }) => (
   <GlassCard className="p-6">
     <div className="flex justify-between items-start mb-6">
       <div className={cn("p-3 rounded-2xl bg-opacity-10 shadow-inner", `bg-${color}`, `text-${color}`)}>
