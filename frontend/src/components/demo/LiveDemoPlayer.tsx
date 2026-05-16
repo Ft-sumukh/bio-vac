@@ -207,8 +207,18 @@ export default function LiveDemoPlayer() {
               <video 
                 ref={videoRef}
                 className="w-full h-full object-cover opacity-60"
-                loop muted={isMuted} playsInline autoPlay
-                src="https://cdn.pixabay.com/video/2021/08/11/84705-587888761_large.mp4"
+                loop 
+                muted={isMuted} 
+                playsInline 
+                autoPlay
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                onTimeUpdate={() => {
+                  if (videoRef.current) {
+                    setCurrentTime((videoRef.current.currentTime / videoRef.current.duration) * 100);
+                  }
+                }}
+                src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
               />
               
               {/* Playback Controls Overlay */}
@@ -218,7 +228,6 @@ export default function LiveDemoPlayer() {
                     if (videoRef.current) {
                       if (isPlaying) videoRef.current.pause();
                       else videoRef.current.play();
-                      setIsPlaying(!isPlaying);
                     }
                   }}
                   className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-brand-blue hover:text-black hover:scale-110 transition-all shadow-[0_0_50px_rgba(0,210,255,0)] hover:shadow-[0_0_50px_rgba(0,210,255,0.5)]"
@@ -229,22 +238,58 @@ export default function LiveDemoPlayer() {
 
               {/* Bottom Video Controls Bar */}
               <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/90 to-transparent flex items-center space-x-6 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
-                <button className="text-white hover:text-brand-blue transition-colors">
+                <button 
+                  onClick={() => {
+                    if (videoRef.current) {
+                      if (isPlaying) videoRef.current.pause();
+                      else videoRef.current.play();
+                    }
+                  }}
+                  className="text-white hover:text-brand-blue transition-colors"
+                >
                   {isPlaying ? <Pause size={24} /> : <Play size={24} />}
                 </button>
-                <button className="text-white hover:text-brand-blue transition-colors">
+                <button 
+                  onClick={() => {
+                    if (videoRef.current) {
+                      videoRef.current.currentTime = 0;
+                    }
+                  }}
+                  className="text-white hover:text-brand-blue transition-colors"
+                >
                   <SkipForward size={24} />
                 </button>
-                <div className="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden relative cursor-pointer">
-                  <div className="absolute top-0 left-0 h-full bg-brand-blue w-1/3 shadow-[0_0_10px_rgba(0,210,255,0.8)]" />
+                <div 
+                  className="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden relative cursor-pointer"
+                  onClick={(e) => {
+                    if (videoRef.current) {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = e.clientX - rect.left;
+                      const percentage = x / rect.width;
+                      videoRef.current.currentTime = percentage * videoRef.current.duration;
+                    }
+                  }}
+                >
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-brand-blue transition-all duration-75 shadow-[0_0_10px_rgba(0,210,255,0.8)]" 
+                    style={{ width: `${currentTime}%` }}
+                  />
                 </div>
                 <button onClick={() => setIsMuted(!isMuted)} className="text-white hover:text-brand-blue transition-colors">
                   {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
                 </button>
-                <button className="text-white hover:text-brand-blue transition-colors">
-                  <Settings size={24} />
-                </button>
-                <button className="text-white hover:text-brand-blue transition-colors">
+                <button 
+                  onClick={() => {
+                    if (videoRef.current) {
+                      if (document.fullscreenElement) {
+                        document.exitFullscreen();
+                      } else {
+                        videoRef.current.requestFullscreen().catch(err => console.error(err));
+                      }
+                    }
+                  }}
+                  className="text-white hover:text-brand-blue transition-colors"
+                >
                   <Maximize size={24} />
                 </button>
               </div>
