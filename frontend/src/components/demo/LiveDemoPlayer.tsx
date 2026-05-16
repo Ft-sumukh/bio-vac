@@ -7,9 +7,9 @@ import dynamic from 'next/dynamic';
 // @ts-ignore
 const Joyride: any = dynamic(() => import('react-joyride').then((mod: any) => ({ default: mod.Joyride || mod.default })), { ssr: false });
 import { 
-  Play, Pause, SkipForward, Maximize, Volume2, VolumeX, 
+  Play, Pause, SkipForward, Maximize, Minimize, Volume2, VolumeX, 
   Settings, User, Radio, Activity, Globe, Crosshair, 
-  Cpu, MessageSquare, MonitorPlay 
+  Cpu, MessageSquare, MonitorPlay, AlertTriangle, Loader2, RotateCcw
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
@@ -45,8 +45,12 @@ export default function LiveDemoPlayer() {
   // States
   const [mode, setMode] = useState<'VIDEO' | 'INTERACTIVE'>('VIDEO');
   const [isPlaying, setIsPlaying] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true); // Must be true for Autoplay policies
   const [currentTime, setCurrentTime] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isBuffering, setIsBuffering] = useState(false);
+  const [hasError, setHasError] = useState(false);
   
   // Interactive Tour States
   const [runTour, setRunTour] = useState(false);
@@ -55,6 +59,7 @@ export default function LiveDemoPlayer() {
   
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
+  const playerContainerRef = useRef<HTMLDivElement>(null);
 
   // Web Speech API Narrator
   const speakNarration = (text: string) => {
@@ -139,7 +144,78 @@ export default function LiveDemoPlayer() {
     };
   }, []);
 
+  // Fullscreen listener
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+  }, []);
+
   const pathname = typeof window !== 'undefined' ? window.location.pathname : '/';
+
+  // Video Controls Logic
+  const handlePlayPause = () => {
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.error("Autoplay/Play prevented:", error);
+            setIsPlaying(false);
+          });
+        }
+      }
+    }
+  };
+
+  const handleTimeUpdate = () => {
+    if (videoRef.current && videoRef.current.duration) {
+      setCurrentTime((videoRef.current.currentTime / videoRef.current.duration) * 100);
+    }
+  };
+
+  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (videoRef.current && videoRef.current.duration) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const percentage = Math.max(0, Math.min(1, x / rect.width));
+      videoRef.current.currentTime = percentage * videoRef.current.duration;
+    }
+  };
+
+  const toggleFullscreen = () => {
+    const container = playerContainerRef.current;
+    if (!container) return;
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(err => console.error(err));
+    } else {
+      if (container.requestFullscreen) {
+        container.requestFullscreen().catch(err => console.error(err));
+      } else if ((container as any).webkitRequestFullscreen) {
+        (container as any).webkitRequestFullscreen();
+      }
+    }
+  };
+
+  const handleVideoError = () => {
+    setHasError(true);
+    setIsLoading(false);
+    setIsBuffering(false);
+  };
+
+  const handleRetry = () => {
+    setHasError(false);
+    setIsLoading(true);
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => setIsPlaying(false));
+    }
+  };
 
   return (
     <section className="w-full mt-12 mb-20 relative">
@@ -185,11 +261,17 @@ export default function LiveDemoPlayer() {
       </div>
 
       {/* Main Player Container */}
-      <div className="relative w-full aspect-video md:aspect-[21/9] rounded-[40px] border border-white/10 bg-[#050505] overflow-hidden group shadow-2xl">
+      <div 
+        ref={playerContainerRef}
+        className={cn(
+          "relative w-full aspect-video md:aspect-[21/9] rounded-[40px] border border-white/10 bg-[#050505] overflow-hidden group shadow-2xl transition-all",
+          isFullscreen ? "rounded-none border-none aspect-auto h-screen" : ""
+        )}
+      >
         
         {/* Scanning Lines overlay */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none mix-blend-overlay" />
-        <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 pointer-events-none mix-blend-overlay z-10" />
+        <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden">
           <motion.div 
             animate={{ y: ['-10%', '110%'] }}
             transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
@@ -204,94 +286,118 @@ export default function LiveDemoPlayer() {
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               className="absolute inset-0 flex items-center justify-center bg-black"
             >
+              
+              {/* Error State */}
+              {hasError && (
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm space-y-4">
+                  <AlertTriangle size={48} className="text-red-500 animate-pulse" />
+                  <h3 className="text-lg font-black uppercase tracking-widest text-white">Signal Lost</h3>
+                  <p className="text-xs text-white/40 uppercase tracking-widest text-center max-w-sm">
+                    Connection to cinematic feed could not be established. Ensure network stability.
+                  </p>
+                  <button 
+                    onClick={handleRetry}
+                    className="mt-4 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-xs font-black uppercase tracking-widest text-white transition-all flex items-center"
+                  >
+                    <RotateCcw size={16} className="mr-2" /> Re-establish Link
+                  </button>
+                </div>
+              )}
+
+              {/* Loading State */}
+              {isLoading && !hasError && (
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm space-y-4">
+                  <Loader2 size={40} className="text-brand-blue animate-spin" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-blue animate-pulse">
+                    Decrypting Visual Data...
+                  </span>
+                </div>
+              )}
+
+              {/* Buffering State */}
+              {isBuffering && !isLoading && !hasError && (
+                <div className="absolute top-8 right-8 z-30 flex items-center space-x-2 bg-black/60 px-4 py-2 rounded-full border border-brand-blue/30 backdrop-blur-sm">
+                  <Activity size={14} className="text-brand-blue animate-pulse" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white">Buffering</span>
+                </div>
+              )}
+
               <video 
                 ref={videoRef}
-                className="w-full h-full object-cover opacity-60"
+                className="w-full h-full object-cover opacity-80"
                 loop 
                 muted={isMuted} 
                 playsInline 
                 autoPlay
                 onPlay={() => setIsPlaying(true)}
                 onPause={() => setIsPlaying(false)}
-                onTimeUpdate={() => {
-                  if (videoRef.current) {
-                    setCurrentTime((videoRef.current.currentTime / videoRef.current.duration) * 100);
-                  }
-                }}
+                onTimeUpdate={handleTimeUpdate}
+                onCanPlay={() => setIsLoading(false)}
+                onWaiting={() => setIsBuffering(true)}
+                onPlaying={() => setIsBuffering(false)}
+                onError={handleVideoError}
                 src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
+                onClick={handlePlayPause}
               />
               
-              {/* Playback Controls Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity bg-black/40">
+              {/* Center Big Play/Pause Button (only visible when paused or hovered) */}
+              <div 
+                className={cn(
+                  "absolute inset-0 z-30 flex items-center justify-center transition-opacity duration-300 pointer-events-none",
+                  !isPlaying ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+                )}
+              >
                 <button 
-                  onClick={() => {
-                    if (videoRef.current) {
-                      if (isPlaying) videoRef.current.pause();
-                      else videoRef.current.play();
-                    }
-                  }}
-                  className="w-24 h-24 rounded-full bg-white/10 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-brand-blue hover:text-black hover:scale-110 transition-all shadow-[0_0_50px_rgba(0,210,255,0)] hover:shadow-[0_0_50px_rgba(0,210,255,0.5)]"
+                  onClick={(e) => { e.stopPropagation(); handlePlayPause(); }}
+                  className="w-24 h-24 rounded-full bg-black/40 backdrop-blur-xl border border-white/20 flex items-center justify-center text-white hover:bg-brand-blue hover:text-black hover:scale-110 transition-all shadow-[0_0_50px_rgba(0,0,0,0.5)] hover:shadow-[0_0_50px_rgba(0,210,255,0.5)] pointer-events-auto"
                 >
                   {isPlaying ? <Pause size={40} className="ml-1" /> : <Play size={40} className="ml-2" />}
                 </button>
               </div>
 
               {/* Bottom Video Controls Bar */}
-              <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/90 to-transparent flex items-center space-x-6 opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0">
+              <div className="absolute bottom-0 left-0 w-full p-4 md:p-8 pt-16 bg-gradient-to-t from-black via-black/80 to-transparent flex items-center space-x-4 md:space-x-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-40 transform translate-y-2 group-hover:translate-y-0">
                 <button 
-                  onClick={() => {
-                    if (videoRef.current) {
-                      if (isPlaying) videoRef.current.pause();
-                      else videoRef.current.play();
-                    }
-                  }}
-                  className="text-white hover:text-brand-blue transition-colors"
+                  onClick={handlePlayPause}
+                  className="text-white hover:text-brand-blue transition-colors outline-none"
                 >
                   {isPlaying ? <Pause size={24} /> : <Play size={24} />}
                 </button>
                 <button 
                   onClick={() => {
-                    if (videoRef.current) {
-                      videoRef.current.currentTime = 0;
-                    }
+                    if (videoRef.current) videoRef.current.currentTime = 0;
                   }}
-                  className="text-white hover:text-brand-blue transition-colors"
+                  className="text-white hover:text-brand-blue transition-colors outline-none hidden md:block"
                 >
                   <SkipForward size={24} />
                 </button>
+
                 <div 
-                  className="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden relative cursor-pointer"
-                  onClick={(e) => {
-                    if (videoRef.current) {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const x = e.clientX - rect.left;
-                      const percentage = x / rect.width;
-                      videoRef.current.currentTime = percentage * videoRef.current.duration;
-                    }
-                  }}
+                  className="flex-1 h-2 bg-white/20 rounded-full overflow-hidden relative cursor-pointer group/bar"
+                  onClick={handleSeek}
                 >
                   <div 
-                    className="absolute top-0 left-0 h-full bg-brand-blue transition-all duration-75 shadow-[0_0_10px_rgba(0,210,255,0.8)]" 
+                    className="absolute top-0 left-0 h-full bg-brand-blue transition-all duration-100 shadow-[0_0_10px_rgba(0,210,255,0.8)]" 
                     style={{ width: `${currentTime}%` }}
                   />
+                  {/* Hover visualizer */}
+                  <div className="absolute top-0 left-0 h-full w-full bg-white/10 opacity-0 group-hover/bar:opacity-100 transition-opacity pointer-events-none" />
                 </div>
-                <button onClick={() => setIsMuted(!isMuted)} className="text-white hover:text-brand-blue transition-colors">
-                  {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
-                </button>
-                <button 
-                  onClick={() => {
-                    if (videoRef.current) {
-                      if (document.fullscreenElement) {
-                        document.exitFullscreen();
-                      } else {
-                        videoRef.current.requestFullscreen().catch(err => console.error(err));
-                      }
-                    }
-                  }}
-                  className="text-white hover:text-brand-blue transition-colors"
-                >
-                  <Maximize size={24} />
-                </button>
+
+                <div className="flex items-center space-x-4 md:space-x-6">
+                  <button onClick={() => {
+                    setIsMuted(!isMuted);
+                    if (videoRef.current) videoRef.current.muted = !isMuted;
+                  }} className="text-white hover:text-brand-blue transition-colors outline-none">
+                    {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
+                  </button>
+                  <button 
+                    onClick={toggleFullscreen}
+                    className="text-white hover:text-brand-blue transition-colors outline-none"
+                  >
+                    {isFullscreen ? <Minimize size={24} /> : <Maximize size={24} />}
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}
@@ -302,7 +408,7 @@ export default function LiveDemoPlayer() {
           {mode === 'INTERACTIVE' && (
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              className="absolute inset-0 flex flex-col items-center justify-center bg-[#050505]"
+              className="absolute inset-0 flex flex-col items-center justify-center bg-[#050505] z-30"
             >
               {/* Tour Visual Backdrop */}
               <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
@@ -369,7 +475,7 @@ export default function LiveDemoPlayer() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 20 }}
-                    className="absolute bottom-12 w-full max-w-4xl px-8 z-30"
+                    className="absolute bottom-12 w-full max-w-4xl px-4 md:px-8 z-30"
                   >
                     <div className="bg-black/80 backdrop-blur-2xl border border-brand-blue/30 p-6 rounded-2xl shadow-[0_0_50px_rgba(0,210,255,0.1)] relative overflow-hidden">
                       {/* Scanning line */}
@@ -379,17 +485,17 @@ export default function LiveDemoPlayer() {
                         className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-blue to-transparent"
                       />
                       <div className="flex items-start space-x-4">
-                        <div className="mt-1">
+                        <div className="mt-1 hidden md:block">
                           <MessageSquare size={18} className="text-brand-blue" />
                         </div>
                         <div>
                           <div className="text-[10px] font-black uppercase tracking-[0.3em] text-brand-blue mb-2">Athena - Lead Intelligence Operator</div>
-                          <p className="text-lg md:text-xl font-medium text-white leading-relaxed">
+                          <p className="text-base md:text-xl font-medium text-white leading-relaxed">
                             {currentSubtitle}
                             <motion.span 
                               animate={{ opacity: [1, 0] }}
                               transition={{ duration: 0.5, repeat: Infinity }}
-                              className="inline-block w-2 h-5 bg-brand-blue ml-1 align-middle"
+                              className="inline-block w-2 h-4 md:h-5 bg-brand-blue ml-1 align-middle"
                             />
                           </p>
                         </div>
