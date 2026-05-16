@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/StatCard";
 import ProteinViewer from "@/components/ProteinViewer";
+import NeuralExplainability from "@/components/NeuralExplainability";
+import Leaderboard from "@/components/Leaderboard";
 import { 
   Radar, 
   RadarChart, 
@@ -43,13 +45,6 @@ const radarData = [
   { subject: 'Virulence', A: 85, B: 90, fullMark: 150 },
 ];
 
-const clusterData = Array.from({ length: 50 }, (_, i) => ({
-  x: Math.random() * 100,
-  y: Math.random() * 100,
-  z: Math.random() * 100,
-  cluster: Math.floor(Math.random() * 3)
-}));
-
 export default function AIResearchPage() {
   return (
     <div className="space-y-10 pb-20">
@@ -74,7 +69,7 @@ export default function AIResearchPage() {
       </section>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* 3D Protein Viewer - The "Wow" Factor */}
+        {/* 3D Protein Viewer */}
         <div className="lg:col-span-8">
            <GlassCard className="p-0 h-[600px] overflow-hidden">
               <ProteinViewer />
@@ -129,43 +124,47 @@ export default function AIResearchPage() {
         </div>
       </div>
 
-      {/* Latent Space Clusters */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-         <GlassCard className="lg:col-span-2 p-10 h-[400px]">
-            <div className="flex items-center justify-between mb-10">
-               <div>
-                  <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Viral Evolution Latent Space (UMAP)</h3>
-                  <div className="text-[10px] font-bold text-brand-blue mt-1 uppercase tracking-widest">Cluster density: High</div>
-               </div>
-               <Binary size={16} className="text-brand-blue" />
-            </div>
-            <div className="h-[250px] w-full">
-               <ResponsiveContainer width="100%" height="100%">
-                  <ScatterChart>
-                     <XAxis type="number" dataKey="x" hide />
-                     <YAxis type="number" dataKey="y" hide />
-                     <ZAxis type="number" range={[20, 100]} />
-                     <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-                     <Scatter data={clusterData}>
-                        {clusterData.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={entry.cluster === 0 ? "#00D2FF" : entry.cluster === 1 ? "#A855F7" : "#FF1744"} />
-                        ))}
-                     </Scatter>
-                  </ScatterChart>
-               </ResponsiveContainer>
-            </div>
-         </GlassCard>
-
-         <GlassCard className="p-10 flex flex-col justify-center">
-            <h3 className="text-lg font-black text-white mb-4">Neural Architecture</h3>
-            <p className="text-xs text-white/40 leading-relaxed mb-8">
-               Our proprietary **Bio-Transformer v4** uses multi-head cross-attention to weigh structural shifts against historic evasion patterns.
-            </p>
-            <button className="w-full py-4 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white/60 hover:bg-white/10 transition-all">
-               View Architecture Diagram
-            </button>
-         </GlassCard>
+      {/* AI Transparency & Engagement Unit */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+         <NeuralExplainability />
+         <Leaderboard />
       </div>
+
+      {/* Research Paper Carousel */}
+      <section className="space-y-6">
+         <h2 className="text-xl font-black uppercase tracking-widest text-white/60">Latest Biological Intelligence</h2>
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {[
+              { title: "Convergent Evolution of SARS-CoV-2", author: "Dr. A. Smith et al.", journal: "Nature Biotech", date: "Mar 2024" },
+              { title: "Deep Learning for Evasion Prediction", author: "BIVAC AI Team", journal: "Lancet ID", date: "Apr 2024" },
+              { title: "Structural Basis of H5N1 Adaptation", author: "University of Zurich", journal: "Cell Reports", date: "May 2024" },
+            ].map((paper, i) => (
+              <motion.div 
+                key={i}
+                whileHover={{ y: -10 }}
+                className="group"
+              >
+                <GlassCard className="p-8 border-white/5 hover:border-purple-500/30 transition-all cursor-pointer">
+                   <div className="flex items-center justify-between mb-6">
+                      <BookOpen size={24} className="text-purple-500/40 group-hover:text-purple-500 transition-colors" />
+                      <ArrowUpRight size={18} className="text-white/10 group-hover:text-white" />
+                   </div>
+                   <h3 className="text-lg font-black text-white leading-tight mb-4">{paper.title}</h3>
+                   <div className="flex items-center justify-between">
+                      <div>
+                         <div className="text-[10px] font-black uppercase tracking-widest text-white/20">Authors</div>
+                         <div className="text-xs font-bold text-white/60">{paper.author}</div>
+                      </div>
+                      <div className="text-right">
+                         <div className="text-[10px] font-black uppercase tracking-widest text-purple-500/60">{paper.journal}</div>
+                         <div className="text-[9px] font-bold text-white/20">{paper.date}</div>
+                      </div>
+                   </div>
+                </GlassCard>
+              </motion.div>
+            ))}
+         </div>
+      </section>
     </div>
   );
 }
