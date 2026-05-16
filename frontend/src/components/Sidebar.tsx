@@ -15,7 +15,9 @@ import {
   Cpu,
   Radio,
   Eye,
-  Crosshair
+  Crosshair,
+  Star,
+  Play
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,6 +46,27 @@ export const Sidebar = () => {
         </div>
         <span className="text-2xl font-black text-white tracking-tighter uppercase">BI-VAC</span>
       </div>
+
+      {/* Special Demo Action */}
+      <Link href="/demo" className="mb-6">
+         <div className={cn(
+           "p-4 rounded-2xl border transition-all relative overflow-hidden group",
+           pathname === '/demo' 
+             ? "bg-brand-blue/20 border-brand-blue/50" 
+             : "bg-white/5 border-white/10 hover:border-brand-blue/40"
+         )}>
+            <div className="flex items-center space-x-3 relative z-10">
+               <div className="w-8 h-8 bg-brand-blue text-white rounded-lg flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                  <Play size={14} className="fill-current" />
+               </div>
+               <div>
+                  <div className="text-[10px] font-black text-white uppercase tracking-widest">Supreme Showcase</div>
+                  <div className="text-[9px] font-bold text-brand-blue uppercase">Live Presentation</div>
+               </div>
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-blue/0 via-brand-blue/10 to-brand-blue/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+         </div>
+      </Link>
 
       <nav className="flex-1 space-y-1 overflow-y-auto pr-2 custom-scrollbar">
         {NAV_ITEMS.map((item) => {
@@ -75,36 +98,19 @@ export const Sidebar = () => {
         {/* Mini Stats Cards */}
         <div className="pt-10 space-y-4">
            <div className="px-2 text-[10px] font-black uppercase tracking-[0.2em] text-white/20 mb-4">Live Status</div>
-           
-           <MiniStat 
-              icon={<Database size={12} />} 
-              label="Sequences Indexed" 
-              value="14,821,092" 
-              color="brand-blue" 
-           />
-           <MiniStat 
-              icon={<Radio size={12} />} 
-              label="Active Outbreaks" 
-              value="12 Clusters" 
-              color="red-500" 
-           />
-           <MiniStat 
-              icon={<Cpu size={12} />} 
-              label="Model Uptime" 
-              value="99.98%" 
-              color="green-400" 
-           />
+           <MiniStat icon={<Database size={12} />} label="Sequences" value="14.8M" color="brand-blue" />
+           <MiniStat icon={<Radio size={12} />} label="Outbreaks" value="12 Clusters" color="red-500" />
         </div>
       </nav>
 
       <div className="mt-auto pt-6 border-t border-white/5">
-        <div className="bg-white/5 rounded-2xl p-4 flex items-center space-x-3 border border-white/5 hover:border-white/10 transition-colors cursor-pointer group">
-          <div className="w-10 h-10 rounded-full bg-brand-blue/20 border border-brand-blue/30 overflow-hidden shrink-0 group-hover:scale-110 transition-transform">
+        <div className="bg-white/5 rounded-2xl p-4 flex items-center space-x-3 border border-white/5">
+          <div className="w-10 h-10 rounded-full bg-brand-blue/20 border border-brand-blue/30 overflow-hidden shrink-0">
              <img src="https://i.pravatar.cc/150?u=sumukh" alt="User" />
           </div>
           <div className="overflow-hidden">
             <div className="text-xs font-black text-white truncate">Sumukh Dr.</div>
-            <div className="text-[10px] font-bold text-white/40 uppercase tracking-widest truncate">Lead Intelligence</div>
+            <div className="text-[10px] font-bold text-white/40 uppercase tracking-widest truncate">Intelligence Lead</div>
           </div>
         </div>
       </div>
@@ -113,8 +119,8 @@ export const Sidebar = () => {
 };
 
 const MiniStat = ({ icon, label, value, color }: any) => (
-  <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl hover:bg-white/[0.05] transition-colors group">
-     <div className="flex items-center space-x-2 text-white/20 mb-1 group-hover:text-white/40 transition-colors">
+  <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl group cursor-help">
+     <div className="flex items-center space-x-2 text-white/20 mb-1 group-hover:text-white/40">
         {icon}
         <span className="text-[9px] font-black uppercase tracking-widest">{label}</span>
      </div>

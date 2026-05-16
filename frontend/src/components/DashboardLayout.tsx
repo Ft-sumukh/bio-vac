@@ -19,6 +19,7 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
       case '/ai-research': return 'Research Lab';
       case '/genomics': return 'Sequence Browser';
       case '/assistant': return 'AI Assistant';
+      case '/demo': return 'Supreme Showcase';
       case '/settings': return 'System Config';
       default: return 'BI-VAC';
     }
