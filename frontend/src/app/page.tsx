@@ -69,31 +69,31 @@ export default function Dashboard() {
       {/* KPI Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <StatCard 
-          title="Sequences Indexed" 
+          label="Sequences Indexed" 
           value="14,821,092" 
           trend="+1.2M" 
-          icon={<Database className="text-brand-blue" />} 
+          icon={Database} 
           chartData={VARIANT_TRACKING_DATA} 
         />
         <StatCard 
-          title="Viral Families" 
+          label="Viral Families" 
           value="1,402" 
           trend="Stable" 
-          icon={<Dna className="text-purple-500" />} 
+          icon={Dna} 
           chartData={VARIANT_TRACKING_DATA} 
         />
         <StatCard 
-          title="Evasion Signals" 
+          label="Evasion Signals" 
           value="42" 
           trend="+8 Critical" 
-          icon={<ShieldAlert className="text-red-500" />} 
+          icon={ShieldAlert} 
           chartData={VARIANT_TRACKING_DATA} 
         />
         <StatCard 
-          title="Model Confidence" 
+          label="Model Confidence" 
           value="98.4%" 
           trend="+0.2%" 
-          icon={<Zap className="text-brand-blue" />} 
+          icon={Zap} 
           chartData={VARIANT_TRACKING_DATA} 
         />
       </div>
