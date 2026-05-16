@@ -2,16 +2,21 @@
 
 import { Sidebar } from "./Sidebar";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Bell, Menu, User } from "lucide-react";
+import { Search, Bell, Menu, User, ChevronLeft } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const pathname = usePathname();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   
   // Dynamic page title based on path
   const getPageTitle = () => {
     switch (pathname) {
       case '/': return 'Intelligence Hub';
+      case '/structural-genomics': return 'Structural Genomics';
+      case '/simulation-lab': return 'Simulation Lab';
       case '/surveillance': return 'Global Surveillance';
       case '/vision': return 'Neural Vision Unit';
       case '/mutations': return 'Mutation Analytics';
@@ -33,15 +38,24 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/5 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
-      <Sidebar />
+      <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       
-      <main className="pl-72 min-h-screen">
+      <main className={cn(
+        "min-h-screen transition-all duration-300 ease-in-out",
+        isSidebarOpen ? "md:pl-72 pl-0" : "md:pl-20 pl-0"
+      )}>
         {/* Production-Grade Header */}
-        <header className="h-20 border-b border-white/5 backdrop-blur-3xl bg-black/40 sticky top-0 z-40 px-12 flex items-center justify-between">
-          <div className="flex items-center space-x-6">
-             <div className="flex items-center space-x-3">
-                <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Section /</span>
-                <span className="text-sm font-black text-white uppercase tracking-widest">{getPageTitle()}</span>
+        <header className="h-20 border-b border-white/5 backdrop-blur-3xl bg-black/40 sticky top-0 z-40 px-6 md:px-12 flex items-center justify-between">
+          <div className="flex items-center space-x-4 md:space-x-6">
+             <button 
+               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+               className="p-3 bg-white/5 border border-white/10 rounded-xl text-white/40 hover:text-white transition-all flex-shrink-0"
+             >
+                {isSidebarOpen ? <ChevronLeft size={18} /> : <Menu size={18} />}
+             </button>
+             <div className="flex items-center space-x-3 truncate">
+                <span className="hidden sm:inline text-[10px] font-black text-white/20 uppercase tracking-[0.4em]">Section /</span>
+                <span className="text-sm font-black text-white uppercase tracking-widest truncate">{getPageTitle()}</span>
              </div>
           </div>
 
