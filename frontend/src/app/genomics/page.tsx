@@ -18,7 +18,8 @@ import {
   FileCode,
   X,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Maximize2
 } from "lucide-react";
 import { GlassCard } from "@/components/ui/StatCard";
 import { MOCK_LIBRARY, VIRAL_FAMILIES } from "@/lib/data-generator";
