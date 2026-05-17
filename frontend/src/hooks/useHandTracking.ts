@@ -134,8 +134,6 @@ export function useHandTracking(
       // @ts-ignore
       const { Hands } = await import('@mediapipe/hands');
       // @ts-ignore
-      const { Camera } = await import('@mediapipe/camera_utils');
-      // @ts-ignore
       const { drawConnectors, drawLandmarks } = await import('@mediapipe/drawing_utils');
 
       const hands = new Hands({
@@ -410,19 +408,48 @@ export function useHandTracking(
 
       handsRef.current = hands;
 
-      // Start capture
+      // Start capture natively with high compatibility constraints
       if (videoRef.current) {
-        const camera = new Camera(videoRef.current, {
-          onFrame: async () => {
-            if (handsRef.current && videoRef.current && state.isEnabled) {
-              await handsRef.current.send({ image: videoRef.current });
-            }
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: { ideal: 'user' }
           },
-          width: 640,
-          height: 480
+          audio: false
         });
-        await camera.start();
-        cameraRef.current = camera;
+        
+        videoRef.current.srcObject = stream;
+        videoRef.current.setAttribute("playsinline", "true");
+        videoRef.current.setAttribute("muted", "true");
+        videoRef.current.setAttribute("autoplay", "true");
+        
+        await videoRef.current.play();
+
+        let active = true;
+        const processFrame = async () => {
+          if (!active) return;
+          if (handsRef.current && videoRef.current && videoRef.current.readyState >= 3) {
+            try {
+              await handsRef.current.send({ image: videoRef.current });
+            } catch (e) {
+              // Frame dropped, normal during initializations
+            }
+          }
+          requestAnimationFrame(processFrame);
+        };
+
+        requestAnimationFrame(processFrame);
+
+        cameraRef.current = {
+          stop: () => {
+            active = false;
+            stream.getTracks().forEach(track => track.stop());
+            if (videoRef.current) {
+              videoRef.current.srcObject = null;
+            }
+          }
+        };
       }
     } catch (err: any) {
       console.error("Camera detection initial failure:", err);

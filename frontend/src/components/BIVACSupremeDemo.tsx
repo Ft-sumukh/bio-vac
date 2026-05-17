@@ -154,7 +154,7 @@ export function BIVACSupremeDemo() {
   const startCamera = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' },
+        video: { facingMode: { ideal: 'environment' } },
       });
 
       if (cameraVideoRef.current) {
