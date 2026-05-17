@@ -30,6 +30,25 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
+  // If we are on the landing page, render without the Dashboard wrapper
+  if (pathname === '/') {
+    return (
+      <div className="min-h-screen bg-bg-dark font-sans overflow-x-hidden selection:bg-accent-500 selection:text-white">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-brand-blue selection:text-white font-sans overflow-x-hidden">
       {/* Dynamic Background Orbs */}
