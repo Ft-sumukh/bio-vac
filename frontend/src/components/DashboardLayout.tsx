@@ -30,6 +30,25 @@ export const DashboardLayout = ({ children }: { children: React.ReactNode }) => 
     }
   };
 
+  // Cinematic landing page bypass
+  if (pathname === '/') {
+    return (
+      <div className="bg-[#050B14] font-sans selection:bg-cyan-500/30 selection:text-cyan-100 overflow-x-hidden min-h-screen">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "circOut" }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050505] text-white selection:bg-brand-blue selection:text-white font-sans overflow-x-hidden">
       {/* Dynamic Background Orbs */}
