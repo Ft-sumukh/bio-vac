@@ -1,9 +1,5 @@
 import os
 from typing import List
-from langchain_community.document_loaders import DirectoryLoader, TextLoader, UnstructuredMarkdownLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.vectorstores import Chroma
 from config.settings import settings
 
 class KnowledgeBaseService:
@@ -15,14 +11,27 @@ class KnowledgeBaseService:
     @property
     def embeddings(self):
         if self._embeddings is None:
-            print("Initializing HuggingFaceEmbeddings (all-MiniLM-L6-v2)...")
-            self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+            try:
+                from langchain_huggingface import HuggingFaceEmbeddings
+                print("Initializing HuggingFaceEmbeddings (all-MiniLM-L6-v2)...")
+                self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+            except ImportError as e:
+                print("HuggingFaceEmbeddings not available. Dynamic import failed:", e)
+                raise e
         return self._embeddings
 
     def index_documents(self):
         """
         Indexes local documentation and root README into ChromaDB.
         """
+        try:
+            from langchain_community.document_loaders import DirectoryLoader, TextLoader
+            from langchain_text_splitters import RecursiveCharacterTextSplitter
+            from langchain_community.vectorstores import Chroma
+        except ImportError as e:
+            print("Required indexing libraries not installed locally:", e)
+            raise e
+
         loaders = [
             DirectoryLoader("../docs", glob="**/*.md", loader_cls=TextLoader, loader_kwargs={"encoding": "utf-8"}),
             TextLoader("../README.md", encoding="utf-8")
@@ -50,6 +59,12 @@ class KnowledgeBaseService:
         print(f"Indexed {len(splits)} chunks into {self.persist_directory}")
 
     def get_retriever(self):
+        try:
+            from langchain_community.vectorstores import Chroma
+        except ImportError as e:
+            print("Chroma is not installed in the active environment:", e)
+            raise e
+
         if not self.vector_store:
             self.vector_store = Chroma(
                 persist_directory=self.persist_directory,
@@ -58,3 +73,4 @@ class KnowledgeBaseService:
         return self.vector_store.as_retriever(search_kwargs={"k": 3})
 
 knowledge_base = KnowledgeBaseService()
+

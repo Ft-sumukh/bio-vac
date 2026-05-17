@@ -1,0 +1,8 @@
+# Heavy local machine learning and database requirements for offline development
+# Install these only if you are running the vectorization indexing process locally:
+# pip install -r requirements-local.txt
+
+chromadb
+langchain-huggingface
+sentence-transformers
+unstructured
