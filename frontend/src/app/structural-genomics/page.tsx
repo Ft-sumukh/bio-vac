@@ -9,7 +9,7 @@ import {
   Layers, ShieldAlert, Cpu, Camera, Activity, RotateCcw, 
   Search, Hand, Power, AlertCircle, RefreshCw, Crosshair, 
   Lock, SlidersHorizontal, Eye, EyeOff, Download, Undo2, 
-  Redo2, HelpCircle, CheckCircle2, Settings, Sparkles, Compass
+  Redo2, HelpCircle, CheckCircle2, Settings, Sparkles, Compass, Maximize2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useHandTracking, GestureType, GestureSettings, GestureHistoryItem } from '@/hooks/useHandTracking';
@@ -363,6 +363,7 @@ export default function StructuralGenomics() {
   // Onboarding & Help Guide states
   const [onboardingStep, setOnboardingStep] = useState<number | null>(null);
   const [showGestureGuide, setShowGestureGuide] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   // References
   const containerRef = useRef<HTMLDivElement>(null);
@@ -951,7 +952,12 @@ export default function StructuralGenomics() {
           {/* 3D RENDERING WORKSPACE PORT */}
           <div 
             ref={containerRef}
-            className="relative w-full aspect-video md:aspect-[4/3] max-h-[380px] bg-black border border-white/10 rounded-2xl overflow-hidden shadow-inner group"
+            className={cn(
+              "bg-black border border-white/10 rounded-2xl overflow-hidden shadow-inner group transition-all duration-300",
+              isMaximized 
+                ? "fixed inset-0 w-screen h-screen z-50 p-6 flex flex-col space-y-4 bg-[#020408]" 
+                : "relative w-full aspect-video md:aspect-[4/3] max-h-[380px]"
+            )}
           >
             {/* Scanner line overlays */}
             <div className="absolute top-2 left-2 z-10 px-3 py-1 bg-black/60 rounded-lg backdrop-blur-md border border-white/10 pointer-events-none">
@@ -959,6 +965,15 @@ export default function StructuralGenomics() {
                 {renderMode} | GL ACTIVE
               </span>
             </div>
+
+            {/* Maximize Toggle Button */}
+            <button 
+              onClick={() => setIsMaximized(!isMaximized)}
+              className="absolute top-2 right-2 z-30 p-2 bg-black/60 hover:bg-brand-blue hover:text-black rounded-lg backdrop-blur-md border border-white/10 text-white/70 transition-all"
+              title={isMaximized ? "Minimize Viewport" : "Maximize Viewport"}
+            >
+              <Maximize2 size={14} className={cn("transition-transform", isMaximized && "rotate-180")} />
+            </button>
 
             {/* Canvas implementation */}
             <Canvas 

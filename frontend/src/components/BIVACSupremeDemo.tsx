@@ -37,6 +37,7 @@ export function BIVACSupremeDemo() {
     'camera' | 'prediction' | 'protein' | 'collaboration' | 'game'
   >('camera');
   const [cameraActive, setCameraActive] = useState(false);
+  const [isProteinMaximized, setIsProteinMaximized] = useState(false);
   const [predictions, setPredictions] = useState([
     { variant: 'JN.1-V5', confidence: 0, threat: 78 },
     { variant: 'XBB.1.5-C', confidence: 0, threat: 62 },
@@ -527,7 +528,23 @@ export function BIVACSupremeDemo() {
                     <h2 className="text-3xl font-black text-white uppercase tracking-tight mb-2">Structural Analysis</h2>
                     <p className="text-xs text-white/40 font-bold uppercase tracking-widest">3D Surface Mapping of Mutation Hotspots</p>
                  </div>
-                 <canvas ref={proteinCanvasRef} className="w-full h-[450px] bg-black/20 rounded-[40px] cursor-grab active:cursor-grabbing" />
+                 
+                 <div className={cn(
+                    "bg-black/20 rounded-[40px] overflow-hidden relative border border-white/5 transition-all duration-300",
+                    isProteinMaximized 
+                      ? "fixed inset-0 w-screen h-screen z-50 p-8 flex flex-col justify-center bg-[#020408]" 
+                      : "w-full h-[450px]"
+                 )}>
+                    <button 
+                      onClick={() => setIsProteinMaximized(!isProteinMaximized)}
+                      className="absolute top-6 right-6 z-30 p-3 bg-black/60 hover:bg-brand-blue hover:text-black rounded-xl backdrop-blur-md border border-white/10 text-white/70 transition-all"
+                      title={isProteinMaximized ? "Minimize Viewport" : "Maximize Viewport"}
+                    >
+                      <Maximize2 size={16} className={cn("transition-transform", isProteinMaximized && "rotate-180")} />
+                    </button>
+                    <canvas ref={proteinCanvasRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
+                 </div>
+
                  <div className="mt-8 flex items-center space-x-6">
                     <div className="flex items-center space-x-3 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-xl">
                        <div className="w-2 h-2 bg-red-500 rounded-full" />
