@@ -8,9 +8,16 @@ from config.settings import settings
 
 class KnowledgeBaseService:
     def __init__(self):
-        self.embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        self._embeddings = None
         self.persist_directory = "./chroma_db"
         self.vector_store = None
+
+    @property
+    def embeddings(self):
+        if self._embeddings is None:
+            print("Initializing HuggingFaceEmbeddings (all-MiniLM-L6-v2)...")
+            self._embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        return self._embeddings
 
     def index_documents(self):
         """

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Globe, 
@@ -146,6 +146,18 @@ export default function SurveillancePage() {
   const [mapMode, setMapMode] = useState<'risk' | 'volume' | 'active'>('risk');
   const [isMapMaximized, setIsMapMaximized] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<any>(null);
+  const [indiaGeo, setIndiaGeo] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/india.geojson")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.features && data.features.length > 0) {
+          setIndiaGeo(data.features[0]);
+        }
+      })
+      .catch((err) => console.error("Error loading india.geojson:", err));
+  }, []);
 
   const selectedRegionData = REGIONAL_RISK.find(r => r.region === selectedRegion);
 
@@ -231,22 +243,26 @@ export default function SurveillancePage() {
                    <Graticule stroke="#ffffff05" strokeWidth={0.5} />
                    <Geographies geography={geoUrl}>
                      {({ geographies }) =>
-                       geographies.map((geo) => (
-                         <Geography
-                           key={geo.rsmKey}
-                           geography={geo}
-                           fill="#ffffff08"
-                           stroke="#ffffff15"
-                           strokeWidth={0.5}
-                           onClick={() => handleCountryClick(geo)}
-                           className="cursor-pointer"
-                           style={{
-                             default: { outline: "none" },
-                             hover: { fill: "#00D2FF20", outline: "none" },
-                             pressed: { outline: "none" },
-                           }}
-                         />
-                       ))
+                       geographies.map((geo) => {
+                         const isIndia = geo.properties.name === "India" || geo.properties.iso_a3 === "IND" || geo.properties.iso_n3 === "356" || geo.id === "356";
+                         const currentGeo = (isIndia && indiaGeo) ? { ...geo, ...indiaGeo } : geo;
+                         return (
+                           <Geography
+                             key={geo.rsmKey}
+                             geography={currentGeo}
+                             fill="#ffffff08"
+                             stroke="#ffffff15"
+                             strokeWidth={0.5}
+                             onClick={() => handleCountryClick(currentGeo)}
+                             className="cursor-pointer"
+                             style={{
+                               default: { outline: "none" },
+                               hover: { fill: "#00D2FF20", outline: "none" },
+                               pressed: { outline: "none" },
+                             }}
+                           />
+                         );
+                       })
                      }
                    </Geographies>
 
@@ -392,8 +408,25 @@ export default function SurveillancePage() {
                   className="w-full h-full"
                 >
                   <Geographies geography={geoUrl}>
-                    {({ geographies }) =>
-                      geographies
+                    {({ geographies }) => {
+                      const isIndiaSelected = selectedCountry.name === "India";
+                      if (isIndiaSelected && indiaGeo) {
+                        return (
+                          <Geography
+                            key="india-focused"
+                            geography={indiaGeo}
+                            fill="#00D2FF10"
+                            stroke="#00D2FF60"
+                            strokeWidth={1.5}
+                            style={{
+                              default: { outline: "none" },
+                              hover: { fill: "#00D2FF20", outline: "none" },
+                              pressed: { outline: "none" },
+                            }}
+                          />
+                        );
+                      }
+                      return geographies
                         .filter(g => {
                           const gName = g.properties.name;
                           const sName = selectedCountry.name;
@@ -412,8 +445,8 @@ export default function SurveillancePage() {
                               pressed: { outline: "none" },
                             }}
                           />
-                        ))
-                    }
+                        ));
+                    }}
                   </Geographies>
 
                   {/* Hotspot Municipal markers inside country */}
