@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   LayoutDashboard, 
@@ -39,6 +40,7 @@ const NAV_ITEMS = [
 
 export const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v: boolean) => void }) => {
   const pathname = usePathname();
+  const [avatarError, setAvatarError] = useState(false);
 
   return (
     <>
@@ -148,8 +150,19 @@ export const Sidebar = ({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (v:
             "bg-white/5 rounded-2xl flex items-center border border-white/5 transition-all overflow-hidden",
             isOpen ? "p-4 space-x-3" : "p-2 justify-center"
           )}>
-            <div className="w-10 h-10 rounded-full bg-brand-blue/20 border border-brand-blue/30 overflow-hidden shrink-0">
-               <img src="https://i.pravatar.cc/150?u=sumukh" alt="User" />
+            <div className="w-10 h-10 rounded-full bg-brand-blue/20 border border-brand-blue/30 overflow-hidden shrink-0 flex items-center justify-center relative">
+              {avatarError ? (
+                <div className="w-full h-full bg-gradient-to-br from-brand-blue to-purple-600 flex items-center justify-center font-black text-xs text-white shadow-inner animate-pulse">
+                  SD
+                </div>
+              ) : (
+                <img 
+                  src="https://api.dicebear.com/7.x/bottts/svg?seed=sumukh&backgroundColor=00D2FF&eyes=shade" 
+                  alt="User" 
+                  onError={() => setAvatarError(true)}
+                  className="w-full h-full object-cover"
+                />
+              )}
             </div>
             {isOpen && (
               <div className="overflow-hidden whitespace-nowrap">

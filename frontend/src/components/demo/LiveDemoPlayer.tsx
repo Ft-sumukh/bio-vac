@@ -51,6 +51,7 @@ export default function LiveDemoPlayer() {
   const [isLoading, setIsLoading] = useState(true);
   const [isBuffering, setIsBuffering] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [videoSource, setVideoSource] = useState<'PRIMARY' | 'BACKUP' | 'YOUTUBE'>('PRIMARY');
   
   // Interactive Tour States
   const [runTour, setRunTour] = useState(false);
@@ -60,6 +61,16 @@ export default function LiveDemoPlayer() {
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerContainerRef = useRef<HTMLDivElement>(null);
+
+  // Redundancy Loader Effect
+  useEffect(() => {
+    if (mode === 'VIDEO' && videoSource !== 'YOUTUBE' && videoRef.current) {
+      videoRef.current.load();
+      if (isPlaying) {
+        videoRef.current.play().catch(() => setIsPlaying(false));
+      }
+    }
+  }, [videoSource, mode]);
 
   // Web Speech API Narrator
   const speakNarration = (text: string) => {
@@ -203,6 +214,12 @@ export default function LiveDemoPlayer() {
   };
 
   const handleVideoError = () => {
+    if (videoSource === 'PRIMARY') {
+      console.warn("Primary mp4 source failed, loading backup stream...");
+      setVideoSource('BACKUP');
+      setIsLoading(true);
+      return;
+    }
     setHasError(true);
     setIsLoading(false);
     setIsBuffering(false);
@@ -211,6 +228,7 @@ export default function LiveDemoPlayer() {
   const handleRetry = () => {
     setHasError(false);
     setIsLoading(true);
+    setVideoSource('PRIMARY');
     if (videoRef.current) {
       videoRef.current.load();
       videoRef.current.play().catch(() => setIsPlaying(false));
@@ -235,28 +253,49 @@ export default function LiveDemoPlayer() {
           </p>
         </div>
         
-        {/* Mode Toggle */}
-        <div className="flex items-center space-x-2 mt-6 md:mt-0 bg-white/5 p-1.5 rounded-2xl border border-white/10 backdrop-blur-xl">
-          <button 
-            onClick={() => setMode('VIDEO')}
-            className={cn(
-              "px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-              mode === 'VIDEO' ? "bg-brand-blue text-black shadow-[0_0_20px_rgba(0,210,255,0.4)]" : "text-white/40 hover:text-white"
-            )}
-          >
-            Cinematic Feed
-          </button>
-          <button 
-            onClick={() => {
-              if (mode === 'VIDEO') startInteractiveDemo();
-            }}
-            className={cn(
-              "px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
-              mode === 'INTERACTIVE' ? "bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-white/40 hover:text-white"
-            )}
-          >
-            AI-Guided Tour
-          </button>
+        <div className="flex flex-col sm:flex-row items-center gap-3 mt-6 md:mt-0">
+          {/* Feed Source Dropdown */}
+          <div className="flex items-center space-x-2 bg-white/5 p-2 rounded-2xl border border-white/10 backdrop-blur-xl">
+            <span className="text-[10px] font-black text-white/30 uppercase pl-2">Stream:</span>
+            <select 
+              value={videoSource}
+              onChange={(e) => {
+                const val = e.target.value as any;
+                setVideoSource(val);
+                setHasError(false);
+                setIsLoading(val !== 'YOUTUBE');
+              }}
+              className="bg-transparent text-xs font-bold text-brand-blue outline-none cursor-pointer uppercase pr-2"
+            >
+              <option value="PRIMARY" className="bg-[#050505] text-white">Google Cloud</option>
+              <option value="BACKUP" className="bg-[#050505] text-white">Backup Mirror</option>
+              <option value="YOUTUBE" className="bg-[#050505] text-white">YouTube Stream</option>
+            </select>
+          </div>
+
+          {/* Mode Toggle */}
+          <div className="flex items-center space-x-2 bg-white/5 p-1.5 rounded-2xl border border-white/10 backdrop-blur-xl">
+            <button 
+              onClick={() => setMode('VIDEO')}
+              className={cn(
+                "px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+                mode === 'VIDEO' ? "bg-brand-blue text-black shadow-[0_0_20px_rgba(0,210,255,0.4)]" : "text-white/40 hover:text-white"
+              )}
+            >
+              Cinematic Feed
+            </button>
+            <button 
+              onClick={() => {
+                if (mode === 'VIDEO') startInteractiveDemo();
+              }}
+              className={cn(
+                "px-6 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all",
+                mode === 'INTERACTIVE' ? "bg-purple-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "text-white/40 hover:text-white"
+              )}
+            >
+              AI-Guided Tour
+            </button>
+          </div>
         </div>
       </div>
 
@@ -289,18 +328,30 @@ export default function LiveDemoPlayer() {
               
               {/* Error State */}
               {hasError && (
-                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/90 backdrop-blur-sm space-y-4">
+                <div className="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/95 backdrop-blur-sm space-y-4 p-6 text-center">
                   <AlertTriangle size={48} className="text-red-500 animate-pulse" />
                   <h3 className="text-lg font-black uppercase tracking-widest text-white">Signal Lost</h3>
                   <p className="text-xs text-white/40 uppercase tracking-widest text-center max-w-sm">
                     Connection to cinematic feed could not be established. Ensure network stability.
                   </p>
-                  <button 
-                    onClick={handleRetry}
-                    className="mt-4 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-xs font-black uppercase tracking-widest text-white transition-all flex items-center"
-                  >
-                    <RotateCcw size={16} className="mr-2" /> Re-establish Link
-                  </button>
+                  <div className="flex flex-wrap gap-4 justify-center mt-4">
+                    <button 
+                      onClick={handleRetry}
+                      className="px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/20 rounded-xl text-xs font-black uppercase tracking-widest text-white transition-all flex items-center"
+                    >
+                      <RotateCcw size={16} className="mr-2" /> Re-establish Link
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setHasError(false);
+                        setIsLoading(false);
+                        setVideoSource('YOUTUBE');
+                      }}
+                      className="px-6 py-3 bg-brand-blue/20 hover:bg-brand-blue/30 border border-brand-blue/30 rounded-xl text-xs font-black uppercase tracking-widest text-brand-blue transition-all flex items-center"
+                    >
+                      Switch to YouTube Feed
+                    </button>
+                  </div>
                 </div>
               )}
 
@@ -322,23 +373,35 @@ export default function LiveDemoPlayer() {
                 </div>
               )}
 
-              <video 
-                ref={videoRef}
-                className="w-full h-full object-cover opacity-80"
-                loop 
-                muted={isMuted} 
-                playsInline 
-                autoPlay
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onTimeUpdate={handleTimeUpdate}
-                onCanPlay={() => setIsLoading(false)}
-                onWaiting={() => setIsBuffering(true)}
-                onPlaying={() => setIsBuffering(false)}
-                onError={handleVideoError}
-                src="https://storage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4"
-                onClick={handlePlayPause}
-              />
+              {videoSource === 'YOUTUBE' ? (
+                <iframe 
+                  className="w-full h-full border-none object-cover opacity-80"
+                  src={`https://www.youtube.com/embed/nJ03G4fLIdA?autoplay=1&mute=${isMuted ? 1 : 0}&loop=1&playlist=nJ03G4fLIdA&controls=0&showinfo=0&rel=0&iv_load_policy=3`}
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              ) : (
+                <video 
+                  ref={videoRef}
+                  className="w-full h-full object-cover opacity-80"
+                  loop 
+                  muted={isMuted} 
+                  playsInline 
+                  autoPlay
+                  onPlay={() => setIsPlaying(true)}
+                  onPause={() => setIsPlaying(false)}
+                  onTimeUpdate={handleTimeUpdate}
+                  onCanPlay={() => setIsLoading(false)}
+                  onWaiting={() => setIsBuffering(true)}
+                  onPlaying={() => setIsBuffering(false)}
+                  onError={handleVideoError}
+                  src={videoSource === 'PRIMARY' 
+                    ? "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" 
+                    : "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                  }
+                  onClick={handlePlayPause}
+                />
+              )}
               
               {/* Center Big Play/Pause Button (only visible when paused or hovered) */}
               <div 
