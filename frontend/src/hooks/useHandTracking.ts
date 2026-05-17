@@ -131,11 +131,11 @@ export function useHandTracking(
     
     try {
       // Dynamic imports to prevent server side issues
-      // @ts-expect-error
+      // @ts-ignore
       const { Hands } = await import('@mediapipe/hands');
-      // @ts-expect-error
+      // @ts-ignore
       const { Camera } = await import('@mediapipe/camera_utils');
-      // @ts-expect-error
+      // @ts-ignore
       const { drawConnectors, drawLandmarks } = await import('@mediapipe/drawing_utils');
 
       const hands = new Hands({

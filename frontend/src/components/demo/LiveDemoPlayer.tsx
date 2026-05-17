@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
-// @ts-expect-error
 const Joyride: any = dynamic(() => import('react-joyride').then((mod: any) => ({ default: mod.Joyride || mod.default })), { ssr: false });
 import { 
   Play, Pause, SkipForward, Maximize, Minimize, Volume2, VolumeX, 
