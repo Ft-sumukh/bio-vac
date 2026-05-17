@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     
     # AI Assistant
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
     # CORS
     BACKEND_CORS_ORIGINS: List[str] = [
         "http://localhost:3000",
