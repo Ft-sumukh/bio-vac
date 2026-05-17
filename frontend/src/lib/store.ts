@@ -7,12 +7,14 @@ interface BIVACState {
   timeRange: '24h' | '7d' | '30d' | 'all';
   theme: 'cyberpunk' | 'biotech' | 'mono';
   alertThreshold: number;
+  apiUrl: string;
   
   setSelectedRegion: (region: string | null) => void;
   setSelectedVariant: (variant: string | null) => void;
   setTimeRange: (range: '24h' | '7d' | '30d' | 'all') => void;
   setTheme: (theme: 'cyberpunk' | 'biotech' | 'mono') => void;
   setAlertThreshold: (threshold: number) => void;
+  setApiUrl: (url: string) => void;
 }
 
 export const useBIVACStore = create<BIVACState>()(
@@ -23,12 +25,14 @@ export const useBIVACStore = create<BIVACState>()(
       timeRange: '7d',
       theme: 'cyberpunk',
       alertThreshold: 75,
+      apiUrl: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000',
       
       setSelectedRegion: (region) => set({ selectedRegion: region }),
       setSelectedVariant: (variant) => set({ selectedVariant: variant }),
       setTimeRange: (range) => set({ timeRange: range }),
       setTheme: (theme) => set({ theme }),
       setAlertThreshold: (threshold) => set({ alertThreshold: threshold }),
+      setApiUrl: (url) => set({ apiUrl: url }),
     }),
     {
       name: 'bivac-storage',

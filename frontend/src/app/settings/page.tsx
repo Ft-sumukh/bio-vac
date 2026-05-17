@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Settings, 
@@ -24,7 +25,31 @@ import { cn } from "@/lib/utils";
 import { useBIVACStore } from "@/lib/store";
 
 export default function SettingsPage() {
-  const { theme, setTheme, alertThreshold, setAlertThreshold } = useBIVACStore();
+  const { theme, setTheme, alertThreshold, setAlertThreshold, apiUrl, setApiUrl } = useBIVACStore();
+  const [testStatus, setTestStatus] = useState<'idle' | 'testing' | 'success' | 'failed'>('idle');
+  const [testMessage, setTestMessage] = useState("");
+
+  const testConnection = async () => {
+    setTestStatus('testing');
+    setTestMessage("");
+    try {
+      const response = await fetch(`${apiUrl}/api/v1/assistant/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: "ping_connection_check", history: [] })
+      });
+      
+      if (response.ok) {
+        setTestStatus('success');
+        setTestMessage("🟢 Connected: FastAPI Biological Intelligence Backend responding normally.");
+      } else {
+        throw new Error(`HTTP ${response.status}`);
+      }
+    } catch (err: any) {
+      setTestStatus('failed');
+      setTestMessage("🔴 Offline: FastAPI backend unreachable. If running locally, start your server via `./scripts/start.bat`.");
+    }
+  };
 
   return (
     <div className="space-y-10 pb-20">
@@ -90,19 +115,43 @@ export default function SettingsPage() {
                     </div>
                  </div>
 
-                 <div className="p-8 bg-brand-blue/5 border border-brand-blue/20 rounded-3xl flex items-center justify-between">
-                    <div className="flex items-center space-x-6">
-                       <div className="w-12 h-12 bg-brand-blue/10 rounded-2xl flex items-center justify-center">
-                          <Key className="text-brand-blue" size={24} />
-                       </div>
-                       <div>
-                          <div className="text-sm font-black text-white">OpenAI API Integration</div>
-                          <div className="text-[10px] font-medium text-white/40 uppercase tracking-widest mt-1">Status: Operational & Fully Connected</div>
-                       </div>
-                    </div>
-                    <button className="px-8 py-3 bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-white/60 hover:text-white rounded-xl transition-all">Rotate API Key</button>
-                 </div>
-              </div>
+                  <div className="p-8 bg-brand-blue/5 border border-brand-blue/20 rounded-3xl flex flex-col space-y-6">
+                     <div className="flex items-center space-x-6">
+                        <div className="w-12 h-12 bg-brand-blue/10 rounded-2xl flex items-center justify-center">
+                           <Key className="text-brand-blue" size={24} />
+                        </div>
+                        <div>
+                           <div className="text-sm font-black text-white">FastAPI Biological Backend API Endpoint</div>
+                           <div className="text-[10px] font-medium text-white/40 uppercase tracking-widest mt-1">Configures remote/serverless intelligence connections</div>
+                        </div>
+                     </div>
+                     
+                     <div className="flex flex-col md:flex-row gap-4">
+                        <input 
+                          type="text" 
+                          placeholder="e.g. http://localhost:8000"
+                          className="flex-1 bg-black border border-white/10 rounded-xl px-6 py-4 text-xs font-bold text-white focus:outline-none focus:border-brand-blue/50"
+                          value={apiUrl}
+                          onChange={(e) => setApiUrl(e.target.value)}
+                        />
+                        <button 
+                          onClick={testConnection}
+                          disabled={testStatus === 'testing'}
+                          className="px-8 py-4 bg-white/5 border border-white/5 text-[10px] font-black uppercase tracking-widest text-white hover:bg-white/10 rounded-xl transition-all disabled:opacity-50 shrink-0"
+                        >
+                          {testStatus === 'testing' ? 'Testing...' : 'Test Connection'}
+                        </button>
+                     </div>
+                     {testMessage && (
+                        <div className={cn(
+                           "text-[10px] font-black uppercase tracking-wider pl-1",
+                           testStatus === 'success' ? "text-green-400 animate-pulse" : "text-red-400"
+                        )}>
+                           {testMessage}
+                        </div>
+                     )}
+                  </div>
+               </div>
            </GlassCard>
 
            <GlassCard className="p-10 border-white/5 bg-black/40">

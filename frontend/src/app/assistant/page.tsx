@@ -18,6 +18,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useBIVACStore } from "@/lib/store";
 
 interface Message {
   role: 'user' | 'assistant';
@@ -46,6 +47,7 @@ export default function AssistantPage() {
       ]
     }
   ]);
+  const { apiUrl } = useBIVACStore();
   const [activeSessionId, setActiveSessionId] = useState<string>("session-1");
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -126,7 +128,6 @@ export default function AssistantPage() {
 
     // 2. Query Real Backend
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const response = await fetch(`${apiUrl}/api/v1/assistant/chat`, {
         method: 'POST',
         headers: {
