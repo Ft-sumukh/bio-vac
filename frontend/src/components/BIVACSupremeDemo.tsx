@@ -153,6 +153,12 @@ export function BIVACSupremeDemo() {
 
   const startCamera = async () => {
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error(
+          "Secure Context Blocked: Camera access requires HTTPS or http://localhost."
+        );
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: { ideal: 'environment' } },
       });
@@ -162,8 +168,8 @@ export function BIVACSupremeDemo() {
         setCameraActive(true);
         notify('📸 Camera initialized. Detecting sequences...', 'success');
       }
-    } catch (error) {
-      notify('❌ Camera access denied', 'error');
+    } catch (error: any) {
+      notify(`❌ Camera error: ${error.message || 'Access denied'}`, 'error');
     }
   };
 

@@ -410,6 +410,13 @@ export function useHandTracking(
 
       // Start capture natively with high compatibility constraints
       if (videoRef.current) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error(
+            "Secure Context Blocked: Webcam access requires a Secure Context (HTTPS or http://localhost). " +
+            "Please run your server with SSL or access the application via http://localhost."
+          );
+        }
+
         const stream = await navigator.mediaDevices.getUserMedia({
           video: {
             width: { ideal: 640 },
