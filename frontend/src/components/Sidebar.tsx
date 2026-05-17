@@ -18,7 +18,8 @@ import {
   Eye,
   Crosshair,
   Star,
-  Play
+  Play,
+  Syringe
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -26,6 +27,7 @@ import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { id: "dashboard", label: "Intelligence Hub", icon: LayoutDashboard, path: "/" },
+  { id: "immunization", label: "Vaccine Ledger", icon: Syringe, path: "/immunization" },
   { id: "structural-genomics", label: "Structural Genomics", icon: Dna, path: "/structural-genomics" },
   { id: "simulation", label: "Simulation Lab", icon: Crosshair, path: "/simulation-lab" },
   { id: "surveillance", label: "Global Surveillance", icon: Globe, path: "/surveillance" },
