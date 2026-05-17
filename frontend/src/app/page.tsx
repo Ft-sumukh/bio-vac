@@ -21,8 +21,7 @@ import { MOCK_ALERTS, VARIANT_TRACKING_DATA } from "@/lib/mock";
 import CollabUnit from "@/components/CollabUnit";
 import SocialSentinel from "@/components/SocialSentinel";
 import { cn } from "@/lib/utils";
-import LiveDemoPlayer from "@/components/demo/LiveDemoPlayer";
-
+import { BIVACSupremeDemo } from "@/components/BIVACSupremeDemo";
 export default function Dashboard() {
   return (
     <div className="space-y-12 pb-20">
@@ -100,7 +99,7 @@ export default function Dashboard() {
       </div>
 
       {/* Platform Demo Center */}
-      <LiveDemoPlayer />
+      <BIVACSupremeDemo />
 
 
       {/* Mission Control */}
