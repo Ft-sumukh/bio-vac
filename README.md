@@ -65,14 +65,21 @@ bio-vac/
 
 ---
 
-## 🛡️ Key Features
-- **Real-Time Surveillance**: Streaming genomic ingest from GISAID/NCBI.
-- **Evasion Scoring**: Proprietary AI scoring based on structural biophysics.
-- **Adjuvant Targeting**: Automated chemistry recommendations for mutation escape.
-- **Enterprise Webhooks**: Integration for pharmaceutical R&D pipelines.
+## 🏆 The 5 Game-Winning Features
+
+BI-VAC positions itself as a 10x strategic moat for pandemic-scale vaccine optimization by bridging genomic surveillance, structural biology, immunology, and vaccine formulation:
+
+1. **[Viral Evolution Forecasting Engine](file:///d:/bio%20vac/docs/architecture.md#feature-1-viral-evolution-forecasting-engine)**: Predicts high-probability viral variants 6-24 months in advance using selection pressure (dN/dS), deep protein language models (ESM-2), and climate/mobility nowcasting.
+2. **[Multi-Pathogen Convergence Detector](file:///d:/bio%20vac/docs/architecture.md#feature-2-multi-pathogen-convergence-detector)**: Identifies cross-pathogen evolutionary hotspots (e.g. RSV, Influenza, SARS-CoV-2) under synchronized selective pressure for multi-valent "combo vaccine" opportunities.
+3. **[Interactive Structural Dynamics Sandbox](file:///d:/bio%20vac/docs/architecture.md#feature-3-interactive-structural-dynamics-sandbox)**: Browser-based, GPU-accelerated molecular dynamics (OpenMM + WebGL + Three.js) allowing real-time mutation simulation and direct binding energy calculation ($\Delta\Delta G$).
+4. **[Immunological Memory Atlas](file:///d:/bio%20vac/docs/architecture.md#feature-4-immunological-memory-atlas)**: Models trained T-cell immunity and cross-reactivity (TCRdist + NetMHCpan 4.1) stratified by population genetics (HLA allele frequencies) and exposure history to optimize regional dosing.
+5. **[AI-Powered Adjuvant Matchmaker](file:///d:/bio%20vac/docs/architecture.md#feature-5-ai-powered-adjuvant-matchmaker)**: Automated formulation recommendation engine utilizing gradient boosting (XGBoost/LightGBM) to match adjuvant properties to target immune profiles (Th1 vs. Th2 vs. Tfh).
+
+For a deep-dive into the technical specifications, REST APIs, database schemas, and mathematical foundations, view the **[BI-VAC Complete Architecture Documentation](file:///d:/bio%20vac/docs/architecture.md)**.
 
 ---
 
 ## 📜 License
 Proprietary Intelligence - BI-VAC Platform.
 Authored by **Antigravity AI**.
+

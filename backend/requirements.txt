@@ -16,3 +16,5 @@ markdown
 unstructured
 langchain-huggingface
 sentence-transformers
+langchain-community
+langchain-google-genai

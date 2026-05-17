@@ -24,8 +24,8 @@ class KnowledgeBaseService:
         Indexes local documentation and root README into ChromaDB.
         """
         loaders = [
-            DirectoryLoader("../docs", glob="**/*.md", loader_cls=UnstructuredMarkdownLoader),
-            TextLoader("../README.md")
+            DirectoryLoader("../docs", glob="**/*.md", loader_cls=TextLoader, loader_kwargs={"encoding": "utf-8"}),
+            TextLoader("../README.md", encoding="utf-8")
         ]
         
         docs = []

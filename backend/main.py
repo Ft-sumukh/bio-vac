@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-from routes.v1 import surveillance, assistant
+from routes.v1 import surveillance, assistant, forecasting, convergence, dynamics, immunity, adjuvant
 from config.settings import settings
 from monitoring.logging import logger
 
@@ -35,6 +35,31 @@ def create_application() -> FastAPI:
         assistant.router, 
         prefix=f"{settings.API_V1_STR}/assistant", 
         tags=["AI Assistant"]
+    )
+    application.include_router(
+        forecasting.router, 
+        prefix=f"{settings.API_V1_STR}/forecasting", 
+        tags=["Evolution Forecasting"]
+    )
+    application.include_router(
+        convergence.router, 
+        prefix=f"{settings.API_V1_STR}/convergence", 
+        tags=["Multi-Pathogen Convergence"]
+    )
+    application.include_router(
+        dynamics.router, 
+        prefix=f"{settings.API_V1_STR}/dynamics", 
+        tags=["Structural Dynamics Sandbox"]
+    )
+    application.include_router(
+        immunity.router, 
+        prefix=f"{settings.API_V1_STR}/immunity", 
+        tags=["Immunological Memory Atlas"]
+    )
+    application.include_router(
+        adjuvant.router, 
+        prefix=f"{settings.API_V1_STR}/adjuvant", 
+        tags=["AI Adjuvant Matchmaker"]
     )
 
     @application.on_event("startup")
